@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">System Settings</h1>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2 class="h4 mb-0">Add New Setting</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('admin_settings') }}">
+                {{ form.hidden_tag() }}
+                
+                <div class="mb-3">
+                    {{ form.key.label(class="form-label") }}
+                    {{ form.key(class="form-control") }}
+                    {% if form.key.errors %}
+                        {% for error in form.key.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    {{ form.value.label(class="form-label") }}
+                    {{ form.value(class="form-control") }}
+                    {% if form.value.errors %}
+                        {% for error in form.value.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    {{ form.description.label(class="form-label") }}
+                    {{ form.description(class="form-control") }}
+                    {% if form.description.errors %}
+                        {% for error in form.description.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2 class="h4 mb-0">Current Settings</h2>
+        </div>
+        <div class="card-body">
+            {% if settings %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Key</th>
+                                <th>Value</th>
+                                <th>Description</th>
+                                <th>Last Updated</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for setting in settings %}
+                            <tr>
+                                <td>{{ setting.key }}</td>
+                                <td>{{ setting.value }}</td>
+                                <td>{{ setting.description or 'No description' }}</td>
+                                <td>{{ setting.updated_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                <td>
+                                    <a href="{{ url_for('admin_edit_setting', setting_id=setting.id) }}" class="btn btn-sm btn-primary">
+                                        Edit
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-center text-muted">No settings found.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}

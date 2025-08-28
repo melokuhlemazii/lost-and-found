@@ -1,0 +1,21 @@
+Claim Update - Additional Information Required
+
+Dear {{ user.username }},
+
+We have reviewed your claim for the {{ item_type }} item "{{ item_name }}" and require additional information before we can process it further.
+
+Claim Details:
+- Item Name: {{ item_name }}
+- Item Type: {{ item_type }}
+- Review Date: {{ review_date.strftime('%Y-%m-%d %H:%M:%S') }}
+- Status: {{ status.title() }}
+- Admin Notes: {{ admin_notes or 'Please contact admin for more details' }}
+
+Please provide the requested information or contact our support team to resolve any issues with your claim.
+
+If you have any questions, please contact our support team.
+
+Thank you for using our service!
+
+Best regards,
+The Lost and Found Team

@@ -1,0 +1,22 @@
+Claim Approved - Please Collect Your Item
+
+Dear {{ user.username }},
+
+Good news! Your claim for the {{ item_type }} item "{{ item_name }}" has been approved by our admin team.
+
+Claim Details:
+- Item Name: {{ item_name }}
+- Item Type: {{ item_type }}
+- Approval Date: {{ approval_date.strftime('%Y-%m-%d %H:%M:%S') }}
+- Admin Notes: {{ admin_notes or 'No additional notes' }}
+
+Please visit the designated location to collect your item as soon as possible.
+
+Location: {{ collection_location or 'Please contact admin for collection details' }}
+
+If you have any questions, please contact our support team.
+
+Thank you for using our service!
+
+Best regards,
+The Lost and Found Team

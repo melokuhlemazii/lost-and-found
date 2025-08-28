@@ -1,0 +1,15 @@
+Welcome to Lost and Found App!
+
+Dear {{ user.username }},
+
+Thank you for registering with our Lost and Found application. Your account has been successfully created.
+
+Here are your account details:
+Username: {{ user.username }}
+Email: {{ user.email }}
+Role: {{ user.role }}
+
+You can now log in to the application and start using our services to report lost items, found items, and make claims.
+
+Best regards,
+The Lost and Found Team

@@ -1,0 +1,18 @@
+Found Item Reported Successfully
+
+Dear {{ user.username }},
+
+You have successfully reported a found item on our Lost and Found platform.
+
+Item Details:
+- Item Name: {{ item.item_name }}
+- Category: {{ item.category }}
+- Description: {{ item.description }}
+- Location Found: {{ item.location }}
+- Current Location: {{ item.current_location }}
+- Date Reported: {{ item.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+
+Thank you for helping reunite lost items with their owners! Our team will review your report and help connect you with the rightful owner if they come forward.
+
+Best regards,
+The Lost and Found Team

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome to Lost and Found App</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1 style="color: #2c3e50; text-align: center;">Welcome to Lost and Found App!</h1>
+        
+        <p>Dear <strong>{{ user.username }}</strong>,</p>
+        
+        <p>Thank you for registering with our Lost and Found application. Your account has been successfully created.</p>
+        
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <h3 style="color: #2c3e50; margin-top: 0;">Your Account Details:</h3>
+            <p><strong>Username:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Role:</strong> {{ user.role }}</p>
+        </div>
+        
+        <p>You can now log in to the application and start using our services to report lost items, found items, and make claims.</p>
+        
+        <p>Best regards,<br>
+        <strong>The Lost and Found Team</strong></p>
+    </div>
+</body>
+</html>

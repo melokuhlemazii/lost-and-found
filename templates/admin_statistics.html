@@ -1,0 +1,326 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="mb-0">
+                <i class="fas fa-chart-bar me-2"></i>Statistics Dashboard
+            </h1>
+            <p class="text-muted mb-0">Comprehensive analytics and insights</p>
+        </div>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Items by Status Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="h4 mb-0">
+                        <i class="fas fa-list-alt me-2"></i>Items by Status
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Lost Items by Status -->
+                        <div class="col-md-6 mb-4">
+                            <h3 class="h5 mb-3 text-danger">
+                                <i class="fas fa-exclamation-triangle me-2"></i>Lost Items by Status
+                            </h3>
+                            {% if lost_by_status %}
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Status</th>
+                                                <th>Count</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for status, count in lost_by_status %}
+                                            <tr>
+                                                <td>
+                                                    <span class="badge {% if status == 'active' %}bg-warning text-dark{% elif status == 'claimed' %}bg-success{% else %}bg-secondary{% endif %}">
+                                                        {{ status.title() }}
+                                                    </span>
+                                                </td>
+                                                <td><strong>{{ count }}</strong></td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>No lost items found.
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Found Items by Status -->
+                        <div class="col-md-6 mb-4">
+                            <h3 class="h5 mb-3 text-success">
+                                <i class="fas fa-hand-holding-heart me-2"></i>Found Items by Status
+                            </h3>
+                            {% if found_by_status %}
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Status</th>
+                                                <th>Count</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for status, count in found_by_status %}
+                                            <tr>
+                                                <td>
+                                                    <span class="badge {% if status == 'active' %}bg-warning text-dark{% elif status == 'claimed' %}bg-success{% else %}bg-secondary{% endif %}">
+                                                        {{ status.title() }}
+                                                    </span>
+                                                </td>
+                                                <td><strong>{{ count }}</strong></td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>No found items found.
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Claims by Status Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="h4 mb-0">
+                        <i class="fas fa-clipboard-list me-2"></i>Claims by Status
+                    </h2>
+                </div>
+                <div class="card-body">
+                    {% if claims_by_status %}
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Status</th>
+                                        <th>Count</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for status, count in claims_by_status %}
+                                    <tr>
+                                        <td>
+                                            <span class="badge {% if status == 'pending' %}bg-warning text-dark{% elif status == 'approved' %}bg-success{% elif status == 'rejected' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                                {{ status.title() }}
+                                            </span>
+                                        </td>
+                                        <td><strong>{{ count }}</strong></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>No claims found.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Items by Category Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="h4 mb-0">
+                        <i class="fas fa-th-large me-2"></i>Items by Category
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Lost Items by Category -->
+                        <div class="col-md-6 mb-4">
+                            <h3 class="h5 mb-3 text-danger">
+                                <i class="fas fa-exclamation-triangle me-2"></i>Lost Items by Category
+                            </h3>
+                            {% if lost_by_category %}
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Category</th>
+                                                <th>Count</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for category, count in lost_by_category %}
+                                            <tr>
+                                                <td>{{ category.replace('_', ' ').title() }}</td>
+                                                <td><strong>{{ count }}</strong></td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>No lost items found.
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Found Items by Category -->
+                        <div class="col-md-6 mb-4">
+                            <h3 class="h5 mb-3 text-success">
+                                <i class="fas fa-hand-holding-heart me-2"></i>Found Items by Category
+                            </h3>
+                            {% if found_by_category %}
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Category</th>
+                                                <th>Count</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for category, count in found_by_category %}
+                                            <tr>
+                                                <td>{{ category.replace('_', ' ').title() }}</td>
+                                                <td><strong>{{ count }}</strong></td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>No found items found.
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Rate Calculations Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="h4 mb-0">
+                        <i class="fas fa-chart-pie me-2"></i>Success Rate Calculations
+                    </h2>
+                </div>
+                <div class="card-body">
+                    {% if lost_by_status and found_by_status %}
+                        {% set total_lost = lost_by_status | sum(attribute=1) %}
+                        {% set total_found = found_by_status | sum(attribute=1) %}
+                        {% set claimed_lost = lost_by_status | selectattr(0, 'equalto', 'claimed') | map(attribute=1) | sum %}
+                        {% set claimed_found = found_by_status | selectattr(0, 'equalto', 'claimed') | map(attribute=1) | sum %}
+                        
+                        <div class="row">
+                            <!-- Lost Items Success Rate -->
+                            <div class="col-md-6 mb-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="h5 mb-0">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>Lost Items Success Rate
+                                        </h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row text-center">
+                                            <div class="col-4">
+                                                <div class="border-end">
+                                                    <h3 class="text-primary">{{ total_lost }}</h3>
+                                                    <small class="text-muted">Total Lost</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="border-end">
+                                                    <h3 class="text-success">{{ claimed_lost }}</h3>
+                                                    <small class="text-muted">Claimed</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <h3 class="text-warning">
+                                                    {% if total_lost > 0 %}
+                                                        {{ "%.1f"|format((claimed_lost / total_lost) * 100) }}%
+                                                    {% else %}
+                                                        0%
+                                                    {% endif %}
+                                                </h3>
+                                                <small class="text-muted">Success Rate</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Found Items Success Rate -->
+                            <div class="col-md-6 mb-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="h5 mb-0">
+                                            <i class="fas fa-hand-holding-heart me-2"></i>Found Items Success Rate
+                                        </h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row text-center">
+                                            <div class="col-4">
+                                                <div class="border-end">
+                                                    <h3 class="text-primary">{{ total_found }}</h3>
+                                                    <small class="text-muted">Total Found</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="border-end">
+                                                    <h3 class="text-success">{{ claimed_found }}</h3>
+                                                    <small class="text-muted">Claimed</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <h3 class="text-warning">
+                                                    {% if total_found > 0 %}
+                                                        {{ "%.1f"|format((claimed_found / total_found) * 100) }}%
+                                                    {% else %}
+                                                        0%
+                                                    {% endif %}
+                                                </h3>
+                                                <small class="text-muted">Success Rate</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>No data available for success rate calculations.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

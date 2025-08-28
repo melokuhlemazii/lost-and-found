@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+            <div class="card form-container fade-in-up">
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-hand-holding-heart fa-3x text-success mb-3"></i>
+                        <h2>Report a Found Item</h2>
+                        <p class="text-muted">Fill out the form below to report a found item.</p>
+                    </div>
+
+                    <form method="POST" enctype="multipart/form-data" action="{{ url_for('report_found_item') }}">
+                        {{ form.csrf_token }}
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.item_name.label(class="form-label") }}
+                                {{ form.item_name(class="form-control", placeholder="e.g., iPhone 13, Blue Backpack") }}
+                                {% for error in form.item_name.errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.category.label(class="form-label") }}
+                                {{ form.category(class="form-select") }}
+                                {% for error in form.category.errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.description.label(class="form-label") }}
+                            {{ form.description(class="form-control", rows="4", placeholder="Provide a detailed description...") }}
+                            {% for error in form.description.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.location.label(class="form-label") }}
+                                {{ form.location(class="form-select") }}
+                                {% for error in form.location.errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.current_location.label(class="form-label") }}
+                                {{ form.current_location(class="form-select") }}
+                                {% for error in form.current_location.errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.full_names.label(class="form-label") }}
+                                {{ form.full_names(class="form-control", placeholder="Your full name") }}
+                                {% for error in form.full_names.errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.student_number.label(class="form-label") }}
+                                {{ form.student_number(class="form-control", placeholder="Your student number") }}
+                                {% for error in form.student_number.errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.student_email.label(class="form-label") }}
+                            {{ form.student_email(class="form-control", placeholder="your.email@university.edu") }}
+                            {% for error in form.student_email.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.photo.label(class="form-label") }}
+                            {{ form.photo(class="form-control") }}
+                            {% for error in form.photo.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                            <small class="text-muted">Supported formats: JPG, PNG, GIF (Max 5MB)</small>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary me-md-2">Cancel</a>
+                            {{ form.submit(class="btn btn-success") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+

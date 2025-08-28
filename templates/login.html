@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5 col-xl-4">
+            <div class="card form-container fade-in-up">
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-sign-in-alt fa-3x text-primary mb-3"></i>
+                        <h2>Welcome Back</h2>
+                        <p class="text-muted">Sign in to your Lost & Found account</p>
+                    </div>
+
+                    <form method="POST" action="{{ url_for('login') }}">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            {{ form.username.label(class="form-label") }}
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                {{ form.username(class="form-control", placeholder="Enter your username") }}
+                            </div>
+                            {% for error in form.username.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.password.label(class="form-label") }}
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                {{ form.password(class="form-control", placeholder="Enter your password") }}
+                            </div>
+                            {% for error in form.password.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="d-grid mb-3">
+                            {{ form.submit(class="btn btn-primary btn-lg") }}
+                        </div>
+                    </form>
+                    
+                    <div class="text-center">
+                        <p class="mb-0 text-muted">Don't have an account?</p>
+                        <a href="{{ url_for('register') }}" class="btn btn-link">Create Account</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

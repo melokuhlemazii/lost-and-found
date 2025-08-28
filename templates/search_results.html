@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="fas fa-search me-2"></i>Search Items</h4>
+                </div>
+                <div class="card-body">
+                    <form method="GET" action="{{ url_for('search_items') }}">
+                        <div class="mb-3">
+                            {{ form.query.label(class="form-label") }}
+                            {{ form.query(class="form-control", placeholder="e.g., 'blue backpack'") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.category.label(class="form-label") }}
+                            {{ form.category(class="form-select") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.item_type.label(class="form-label") }}
+                            {{ form.item_type(class="form-select") }}
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                            <a href="{{ url_for('search_items') }}" class="btn btn-outline-secondary">Clear Search</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h4>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('browse_lost_items') }}" class="btn btn-outline-primary">Browse Lost Items</a>
+                        <a href="{{ url_for('browse_found_items') }}" class="btn btn-outline-info">Browse Found Items</a>
+                        {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('report_lost_item') }}" class="btn btn-outline-danger">Report a Lost Item</a>
+                            <a href="{{ url_for('report_found_item') }}" class="btn btn-outline-success">Report a Found Item</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <h2 class="mb-4">Search Results</h2>
+
+            {% if not results.lost and not results.found %}
+                <div class="alert alert-info" role="alert">
+                    <h4 class="alert-heading">No items found!</h4>
+                    <p>No items matched your search criteria. Try broadening your search or use the quick actions to browse all items.</p>
+                </div>
+            {% else %}
+                {% if results.lost %}
+                    <h3 class="mb-3">Lost Items ({{ results.lost|length }} found)</h3>
+                    <div class="row row-cols-1 row-cols-md-2 g-4">
+                        {% for item in results.lost %}
+                            <div class="col">
+                                <div class="item-card h-100">
+                                    {% if item.photo_filename %}
+                                        <img src="{{ url_for('uploaded_file', filename=item.photo_filename) }}" class="item-photo" alt="{{ item.item_name }}">
+                                    {% else %}
+                                        <img src="{{ url_for('static', filename='images/placeholder.png') }}" class="item-photo" alt="{{ item.item_name }}">
+                                    {% endif %}
+                                    <div class="item-card-body">
+                                        <h5>{{ item.item_name }}</h5>
+                                        <p class="mb-1"><small class="text-muted">Category: {{ item.category }}</small></p>
+                                        <p class="mb-1"><small class="text-muted">Lost at: {{ item.location }}</small></p>
+                                        <p class="mb-1"><small class="text-muted">Date: {{ item.created_at.strftime('%Y-%m-%d') }}</small></p>
+                                        <a href="{{ url_for('lost_item_detail', item_id=item.id) }}" class="btn btn-sm btn-outline-primary mt-2">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <hr class="my-4">
+                {% endif %}
+
+                {% if results.found %}
+                    <h3 class="mb-3">Found Items ({{ results.found|length }} found)</h3>
+                    <div class="row row-cols-1 row-cols-md-2 g-4">
+                        {% for item in results.found %}
+                            <div class="col">
+                                <div class="item-card h-100">
+                                    {% if item.photo_filename %}
+                                        <img src="{{ url_for('uploaded_file', filename=item.photo_filename) }}" class="item-photo" alt="{{ item.item_name }}">
+                                    {% else %}
+                                        <img src="{{ url_for('static', filename='images/placeholder.png') }}" class="item-photo" alt="{{ item.item_name }}">
+                                    {% endif %}
+                                    <div class="item-card-body">
+                                        <h5>{{ item.item_name }}</h5>
+                                        <p class="mb-1"><small class="text-muted">Category: {{ item.category }}</small></p>
+                                        <p class="mb-1"><small class="text-muted">Found at: {{ item.location }}</small></p>
+                                        <p class="mb-1"><small class="text-muted">Current location: {{ item.current_location }}</small></p>
+                                        <p class="mb-1"><small class="text-muted">Date: {{ item.created_at.strftime('%Y-%m-%d') }}</small></p>
+                                        <a href="{{ url_for('found_item_detail', item_id=item.id) }}" class="btn btn-sm btn-outline-primary mt-2">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

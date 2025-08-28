@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Manage Categories</h1>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2 class="h4 mb-0">Add New Category</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('admin_categories') }}">
+                {{ form.hidden_tag() }}
+                
+                <div class="mb-3">
+                    {{ form.name.label(class="form-label") }}
+                    {{ form.name(class="form-control") }}
+                    {% if form.name.errors %}
+                        {% for error in form.name.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    {{ form.description.label(class="form-label") }}
+                    {{ form.description(class="form-control") }}
+                    {% if form.description.errors %}
+                        {% for error in form.description.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3 form-check">
+                    {{ form.is_active(class="form-check-input") }}
+                    {{ form.is_active.label(class="form-check-label") }}
+                </div>
+                
+                <div class="mb-3">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2 class="h4 mb-0">Existing Categories</h2>
+        </div>
+        <div class="card-body">
+            {% if categories %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Active</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for category in categories %}
+                            <tr>
+                                <td>{{ category.id }}</td>
+                                <td>{{ category.name }}</td>
+                                <td>{{ category.description or 'No description' }}</td>
+                                <td>{{ 'Yes' if category.is_active else 'No' }}</td>
+                                <td>{{ category.created_at.strftime('%Y-%m-%d') }}</td>
+                                <td>
+                                    <form method="POST" action="{{ url_for('admin_toggle_category', category_id=category.id) }}" class="d-inline">
+                                        <button type="submit" class="btn btn-sm {{ 'btn-warning' if category.is_active else 'btn-success' }}">
+                                            {{ 'Deactivate' if category.is_active else 'Activate' }}
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-center text-muted">No categories found.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}

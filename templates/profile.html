@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">My Profile</h1>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2 class="h4 mb-0">Edit Profile Information</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                
+                <div class="mb-3">
+                    {{ form.username.label(class="form-label") }}
+                    {{ form.username(class="form-control") }}
+                    {% if form.username.errors %}
+                        {% for error in form.username.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    {{ form.email.label(class="form-label") }}
+                    {{ form.email(class="form-control") }}
+                    {% if form.email.errors %}
+                        {% for error in form.email.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2 class="h4 mb-0">Account Information</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Username:</strong> {{ current_user.username }}</p>
+                    <p><strong>Email:</strong> {{ current_user.email }}</p>
+                    <p><strong>Role:</strong> {{ current_user.role }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Verified:</strong> {{ 'Yes' if current_user.is_verified else 'No' }}</p>
+                    <p><strong>Member since:</strong> {{ current_user.created_at.strftime('%Y-%m-%d') }}</p>
+                    {% if current_user.last_login %}
+                        <p><strong>Last login:</strong> {{ current_user.last_login.strftime('%Y-%m-%d %H:%M') }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2 class="h4 mb-0">Quick Actions</h2>
+        </div>
+        <div class="card-body">
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="{{ url_for('change_password') }}" class="btn btn-outline-primary">
+                    <i class="fas fa-key me-1"></i>Change Password
+                </a>
+                <a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

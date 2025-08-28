@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2 class="mb-0">
+                    <i class="fas fa-hand-holding-heart text-success me-2"></i>Found Items
+                </h2>
+            </div>
+            <div class="card-body">
+                <!-- Search and Filter Form -->
+                <form method="GET" action="{{ url_for('browse_found_items') }}" class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label for="query" class="form-label">Search Items</label>
+                        <input type="text" name="query" id="query" class="form-control" 
+                               value="{{ search_query }}" placeholder="Search by name, description, or location...">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="category" class="form-label">Category</label>
+                        <select name="category" id="category" class="form-select">
+                            <option value="all" {% if category_filter == 'all' %}selected{% endif %}>All Categories</option>
+                            <option value="electronics" {% if category_filter == 'electronics' %}selected{% endif %}>Electronics</option>
+                            <option value="bags" {% if category_filter == 'bags' %}selected{% endif %}>Bags</option>
+                            <option value="books" {% if category_filter == 'books' %}selected{% endif %}>Books</option>
+                            <option value="personal_items" {% if category_filter == 'personal_items' %}selected{% endif %}>Personal Items</option>
+                            <option value="clothing" {% if category_filter == 'clothing' %}selected{% endif %}>Clothing</option>
+                            <option value="jewelry" {% if category_filter == 'jewelry' %}selected{% endif %}>Jewelry</option>
+                            <option value="sports" {% if category_filter == 'sports' %}selected{% endif %}>Sports</option>
+                            <option value="other" {% if category_filter == 'other' %}selected{% endif %}>Other</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <div class="d-grid gap-2 w-100">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search me-1"></i>Search
+                            </button>
+                            <a href="{{ url_for('browse_found_items') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-1"></i>Clear
+                            </a>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Results Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="mb-0">
+                        <i class="fas fa-list me-2"></i>Found Items ({{ items.total }} total)
+                    </h4>
+                    {% if current_user.is_authenticated %}
+                        <a href="{{ url_for('report_found_item') }}" class="btn btn-success">
+                            <i class="fas fa-plus me-1"></i>Report Found Item
+                        </a>
+                    {% endif %}
+                </div>
+
+                <!-- Items Grid -->
+                {% if items.items %}
+                    <div class="item-grid">
+                        {% for item in items.items %}
+                        <div class="item-card">
+                            {% if item.photo_filename %}
+                                <img src="{{ url_for('uploaded_file', filename=item.photo_filename) }}" 
+                                     alt="{{ item.item_name }}" class="item-photo">
+                            {% else %}
+                                <div class="item-photo bg-light d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-image text-muted" style="font-size: 3rem;"></i>
+                                </div>
+                            {% endif %}
+                            
+                            <h5 class="mb-2">{{ item.item_name }}</h5>
+                            <p class="text-muted mb-2">
+                                <i class="fas fa-tag me-1"></i>{{ item.category }}
+                            </p>
+                            <p class="text-muted mb-2">
+                                <i class="fas fa-map-marker-alt me-1"></i>{{ item.location }}
+                            </p>
+                            <p class="text-muted mb-2">
+                                <i class="fas fa-home me-1"></i>{{ item.current_location }}
+                            </p>
+                            <p class="text-muted mb-3">
+                                <i class="fas fa-calendar me-1"></i>{{ item.created_at.strftime('%Y-%m-%d') }}
+                            </p>
+                            <p class="mb-3">{{ item.description[:100] }}{% if item.description|length > 100 %}...{% endif %}</p>
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-{{ 'success' if item.status == 'claimed' else 'warning' if item.status == 'active' else 'secondary' }}">
+                                    {{ item.status|title }}
+                                </span>
+                                <a href="{{ url_for('found_item_detail', item_id=item.id) }}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-eye me-1"></i>View Details
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if items.pages > 1 %}
+                    <nav aria-label="Found items pagination" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            {% if items.has_prev %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('browse_found_items', page=items.prev_num, category=category_filter, query=search_query) }}">
+                                        <i class="fas fa-chevron-left"></i> Previous
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            {% for page_num in items.iter_pages() %}
+                                {% if page_num %}
+                                    <li class="page-item {{ 'active' if page_num == items.page else '' }}">
+                                        <a class="page-link" href="{{ url_for('browse_found_items', page=page_num, category=category_filter, query=search_query) }}">
+                                            {{ page_num }}
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if items.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('browse_found_items', page=items.next_num, category=category_filter, query=search_query) }}">
+                                        Next <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No found items found</h5>
+                        <p class="text-muted">Try adjusting your search criteria or browse all items.</p>
+                        <a href="{{ url_for('browse_found_items') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-list me-1"></i>View All Items
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-lightbulb me-2"></i>Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3 col-sm-6">
+                        <a href="{{ url_for('browse_lost_items') }}" class="btn btn-outline-danger w-100">
+                            <i class="fas fa-exclamation-triangle me-1"></i>Browse Lost Items
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <a href="{{ url_for('search_items') }}" class="btn btn-outline-info w-100">
+                            <i class="fas fa-search me-1"></i>Search All Items
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <a href="{{ url_for('claim') }}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-gavel me-1"></i>Claim an Item
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <a href="{{ url_for('user_dashboard') }}" class="btn btn-outline-secondary w-100">
+                            <i class="fas fa-tachometer-alt me-1"></i>My Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

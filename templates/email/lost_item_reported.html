@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lost Item Reported Successfully</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1 style="color: #2c3e50; text-align: center;">Lost Item Reported Successfully</h1>
+        
+        <p>Dear <strong>{{ user.username }}</strong>,</p>
+        
+        <p>You have successfully reported a lost item on our Lost and Found platform.</p>
+        
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <h3 style="color: #2c3e50; margin-top: 0;">Item Details:</h3>
+            <p><strong>Item Name:</strong> {{ item.item_name }}</p>
+            <p><strong>Category:</strong> {{ item.category }}</p>
+            <p><strong>Description:</strong> {{ item.description }}</p>
+            <p><strong>Location Lost:</strong> {{ item.location }}</p>
+            <p><strong>Date Reported:</strong> {{ item.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+        </div>
+        
+        <p>Our team will review your report and notify you if someone finds your item.</p>
+        
+        <p>Thank you for using our service!</p>
+        
+        <p>Best regards,<br>
+        <strong>The Lost and Found Team</strong></p>
+    </div>
+</body>
+</html>
