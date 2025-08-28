@@ -68,7 +68,7 @@ def login():
         if current_user.role == 'admin':
             return redirect(url_for('admin_dashboard'))
         else:
-            return redirect(url_for('home'))
+            return redirect(url_for('user_dashboard'))
     
     form = LoginForm()
     if form.validate_on_submit():
@@ -89,7 +89,7 @@ def login():
             if user.role == 'admin':
                 return redirect(url_for('admin_dashboard'))
             else:
-                return redirect(url_for('home'))
+                return redirect(url_for('user_dashboard'))
         else:
             flash('Invalid username or password', 'error')
     
@@ -102,7 +102,7 @@ def register():
         if current_user.role == 'admin':
             return redirect(url_for('admin_dashboard'))
         else:
-            return redirect(url_for('home'))
+            return redirect(url_for('user_dashboard'))
     
     form = RegistrationForm()
     if form.validate_on_submit():
