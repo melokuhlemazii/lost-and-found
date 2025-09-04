@@ -64,7 +64,7 @@ A modern Flask web application for managing lost and found items, featuring a fu
 ## Customization
 - **Styling:** All templates use Tailwind CSS. You can further customize colors and layouts in `static/css/` or by editing the HTML templates.
 - **Database:** Default is SQLite. To use another DB, update `config.py` and reinitialize.
-- **Email:** Email notifications use Flask-Mail. Configure SMTP in `config.py`.
+
 
 ## Contributing
 Pull requests and suggestions are welcome! Please open an issue for major changes.
