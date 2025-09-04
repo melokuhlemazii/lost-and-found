@@ -1,83 +1,52 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div class="container py-4">
-    <h1 class="mb-4">Edit User: {{ user.username }}</h1>
-
-    <div class="card mb-4">
-        <div class="card-header">
-            <h2 class="h4 mb-0">User Information</h2>
-        </div>
-        <div class="card-body">
-            <div class="row mb-3">
-                <div class="col-md-3">
-                    <label class="form-label">Username:</label>
-                </div>
-                <div class="col-md-9">
-                    <span>{{ user.username }}</span>
-                </div>
-            </div>
-            
-            <div class="row mb-3">
-                <div class="col-md-3">
-                    <label class="form-label">Email:</label>
-                </div>
-                <div class="col-md-9">
-                    <span>{{ user.email }}</span>
-                </div>
-            </div>
-        </div>
+<div class="max-w-4xl mx-auto px-4 py-10 space-y-10">
+    <div class="flex flex-col gap-2">
+        <h1 class="text-2xl font-semibold tracking-tight flex items-center gap-2"><i class="fas fa-user-edit text-primary-600"></i><span>Edit User: {{ user.username }}</span></h1>
+        <p class="text-sm text-gray-600">Modify account flags and role.</p>
     </div>
+    <!-- User Details -->
+    <section class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <header class="border-b px-6 py-4 flex items-center gap-2"><h2 class="text-sm font-semibold tracking-wide flex items-center gap-2"><i class="fas fa-id-card text-primary-500"></i>User Information</h2></header>
+        <dl class="divide-y divide-gray-100">
+            <div class="grid grid-cols-3 gap-4 px-6 py-4">
+                <dt class="text-xs font-medium uppercase tracking-wide text-gray-500">Username</dt>
+                <dd class="col-span-2 text-sm font-semibold text-gray-800">{{ user.username }}</dd>
+            </div>
+            <div class="grid grid-cols-3 gap-4 px-6 py-4">
+                <dt class="text-xs font-medium uppercase tracking-wide text-gray-500">Email</dt>
+                <dd class="col-span-2 text-sm font-medium text-gray-800">{{ user.email }}</dd>
+            </div>
+        </dl>
+    </section>
 
-    <div class="card">
-        <div class="card-header">
-            <h2 class="h4 mb-0">Edit User</h2>
-        </div>
-        <div class="card-body">
-            <form method="POST" action="{{ url_for('admin_edit_user', user_id=user.id) }}">
-                {{ form.hidden_tag() }}
-                
-                <div class="mb-3 form-check">
-                    {{ form.is_verified(class="form-check-input") }}
-                    {{ form.is_verified.label(class="form-check-label") }}
-                    {% if form.is_verified.errors %}
-                        {% for error in form.is_verified.errors %}
-                            <div class="text-danger small mt-1">{{ error }}</div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-                
-                <div class="mb-3 form-check">
-                    {{ form.is_banned(class="form-check-input") }}
-                    {{ form.is_banned.label(class="form-check-label") }}
-                    {% if form.is_banned.errors %}
-                        {% for error in form.is_banned.errors %}
-                            <div class="text-danger small mt-1">{{ error }}</div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-                
-                <div class="mb-3">
-                    {{ form.role.label(class="form-label") }}
-                    {{ form.role(class="form-select") }}
-                    {% if form.role.errors %}
-                        {% for error in form.role.errors %}
-                            <div class="text-danger small mt-1">{{ error }}</div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-                
-                <div class="mb-3">
-                    {{ form.submit(class="btn btn-primary") }}
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div class="mt-4">
-        <a href="{{ url_for('admin_users') }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left me-1"></i>Back to Users
-        </a>
+    <!-- Edit Form -->
+    <section class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <header class="border-b px-6 py-4 flex items-center gap-2"><h2 class="text-sm font-semibold tracking-wide flex items-center gap-2"><i class="fas fa-user-cog text-primary-500"></i>Edit User</h2></header>
+        <form method="POST" action="{{ url_for('admin_edit_user', user_id=user.id) }}" class="p-6 space-y-6">
+            {{ form.hidden_tag() }}
+            <div class="flex flex-col gap-4 md:flex-row md:gap-8">
+                <label class="flex items-start gap-3 rounded-md border border-gray-200 bg-gray-50 px-4 py-3 text-sm hover:bg-gray-100 cursor-pointer md:w-1/2">
+                    {{ form.is_verified(class_='mt-1 h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500') }}
+                    <span class="flex-1"><span class="block font-medium text-gray-800">Verified</span><span class="block text-xs text-gray-500">Account has been email/identity confirmed.</span></span>
+                </label>
+                <label class="flex items-start gap-3 rounded-md border border-gray-200 bg-gray-50 px-4 py-3 text-sm hover:bg-gray-100 cursor-pointer md:w-1/2">
+                    {{ form.is_banned(class_='mt-1 h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500') }}
+                    <span class="flex-1"><span class="block font-medium text-gray-800">Banned</span><span class="block text-xs text-gray-500">User cannot log in while banned.</span></span>
+                </label>
+            </div>
+            <div class="space-y-1 max-w-xs">
+                {{ form.role.label(class_='text-xs font-medium text-gray-600') }}
+                {{ form.role(class_='w-full rounded-md border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500') }}
+                {% if form.role.errors %}<p class="text-xs text-red-600">{{ form.role.errors[0] }}</p>{% endif %}
+            </div>
+            <div class="pt-2">
+                {{ form.submit(class_='inline-flex items-center gap-2 rounded-md bg-primary-600 px-6 py-2.5 text-sm font-semibold text-white shadow hover:bg-primary-700') }}
+            </div>
+        </form>
+    </section>
+    <div class="flex">
+        <a href="{{ url_for('admin_users') }}" class="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"><i class="fas fa-arrow-left"></i>Back to Users</a>
     </div>
 </div>
 {% endblock %}

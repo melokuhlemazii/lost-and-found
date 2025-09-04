@@ -1,0 +1,156 @@
+/* modern-lostfound.css - Modern, clean, consistent UI for Lost & Found */
+
+body {
+    background: #f8f9fa;
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    color: #222;
+}
+
+.navbar {
+    background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.navbar-brand, .navbar-nav .nav-link {
+    color: #fff !important;
+    font-weight: 500;
+}
+.navbar-nav .nav-link.active {
+    border-bottom: 2px solid #fff;
+}
+
+.hero-section {
+    background: linear-gradient(90deg, #e3f2fd 0%, #fff 100%);
+    padding: 60px 0 40px 0;
+    text-align: center;
+}
+.hero-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #007bff;
+}
+.hero-subtitle {
+    font-size: 1.3rem;
+    color: #555;
+    margin-bottom: 2rem;
+}
+
+.card {
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    border: none;
+}
+.card-header {
+    background: #f1f3f4;
+    border-bottom: 1px solid #e3e3e3;
+    font-weight: 600;
+}
+
+.item-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+.item-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    padding: 1.2rem;
+    transition: box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 340px;
+}
+.item-card:hover {
+    box-shadow: 0 4px 16px rgba(0,123,255,0.12);
+}
+.item-photo {
+    width: 100%;
+    max-width: 180px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    background: #f8f9fa;
+}
+.photo-placeholder {
+    width: 100%;
+    max-width: 180px;
+    height: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #e9ecef;
+    border-radius: 8px;
+    color: #bbb;
+    margin-bottom: 1rem;
+}
+
+.stats-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    padding: 1.2rem;
+    text-align: center;
+}
+.stats-number {
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+.stats-label {
+    font-size: 1rem;
+    color: #888;
+}
+
+.form-container {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    padding: 2rem;
+}
+.form-label {
+    font-weight: 500;
+    color: #007bff;
+}
+.btn {
+    border-radius: 6px;
+    font-weight: 500;
+    padding: 0.5rem 1.2rem;
+}
+.btn-lg {
+    padding: 0.7rem 2rem;
+    font-size: 1.2rem;
+}
+
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.7s forwards;
+}
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+footer {
+    background: #f1f3f4;
+    padding: 1.2rem 0;
+    text-align: center;
+    color: #555;
+    margin-top: 2rem;
+    border-top: 1px solid #e3e3e3;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    .item-grid {
+        grid-template-columns: 1fr;
+    }
+    .hero-title {
+        font-size: 2rem;
+    }
+}

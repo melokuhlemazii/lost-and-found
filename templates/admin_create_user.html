@@ -1,104 +1,81 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div class="container py-4">
-    <h1 class="mb-4">Create New User</h1>
-
-    <div class="card">
-        <div class="card-header">
-            <h2 class="h4 mb-0">User Information</h2>
-        </div>
-        <div class="card-body">
-            <form method="POST" action="{{ url_for('admin_create_user') }}">
-                {{ form.hidden_tag() }}
-                
-                <div class="mb-3">
-                    {{ form.username.label(class="form-label") }}
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-user"></i></span>
-                        {{ form.username(class="form-control", placeholder="Enter username") }}
-                    </div>
-                    {% for error in form.username.errors %}
-                        <div class="text-danger small mt-1">{{ error }}</div>
-                    {% endfor %}
-                </div>
-                
-                <div class="mb-3">
-                    {{ form.email.label(class="form-label") }}
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                        {{ form.email(class="form-control", placeholder="Enter email address") }}
-                    </div>
-                    {% for error in form.email.errors %}
-                        <div class="text-danger small mt-1">{{ error }}</div>
-                    {% endfor %}
-                </div>
-                
-                <div class="mb-3">
-                    {{ form.role.label(class="form-label") }}
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
-                        {{ form.role(class="form-select") }}
-                    </div>
-                    {% for error in form.role.errors %}
-                        <div class="text-danger small mt-1">{{ error }}</div>
-                    {% endfor %}
-                </div>
-                
-                <div class="mb-3">
-                    {{ form.password.label(class="form-label") }}
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                        {{ form.password(class="form-control", placeholder="Enter password") }}
-                    </div>
-                    {% for error in form.password.errors %}
-                        <div class="text-danger small mt-1">{{ error }}</div>
-                    {% endfor %}
-                </div>
-                
-                <div class="mb-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="generatePassword" checked>
-                        <label class="form-check-label" for="generatePassword">
-                            Generate random password
-                        </label>
-                    </div>
-                    <div class="form-text">
-                        If checked, a random password will be generated and displayed after creation.
-                    </div>
-                </div>
-                
-                <div class="mb-3">
-                    {{ form.submit(class="btn btn-primary") }}
-                </div>
-            </form>
-        </div>
+<div class="max-w-5xl mx-auto px-4 py-10 space-y-10">
+    <div class="flex flex-col gap-2">
+        <h1 class="text-2xl font-semibold tracking-tight flex items-center gap-2"><i class="fas fa-user-plus text-primary-600"></i><span>Create New User</span></h1>
+        <p class="text-sm text-gray-600">Provision a new account and optionally auto-generate a secure password.</p>
     </div>
 
-    <div class="mt-4">
-        <a href="{{ url_for('admin_users') }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left me-1"></i>Back to Users
-        </a>
-    </div>
+    <form method="POST" action="{{ url_for('admin_create_user') }}" class="space-y-12">
+        {{ form.hidden_tag() }}
+        <!-- User Information -->
+        <section class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+            <header class="border-b px-6 py-4 flex items-center gap-2">
+                <h2 class="text-sm font-semibold tracking-wide flex items-center gap-2"><i class="fas fa-id-card text-primary-500"></i>User Information</h2>
+            </header>
+            <div class="p-6 grid gap-6 md:grid-cols-2">
+                <!-- Username -->
+                <div class="space-y-1 md:col-span-1">
+                    {{ form.username.label(class_='text-xs font-medium text-gray-600') }}
+                    <div class="relative">
+                        <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><i class="fas fa-user"></i></span>
+                        {{ form.username(class_='w-full rounded-md border-gray-300 pl-9 pr-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500', placeholder='Enter username') }}
+                    </div>
+                    {% if form.username.errors %}<p class="text-xs text-red-600">{{ form.username.errors[0] }}</p>{% endif %}
+                </div>
+                <!-- Email -->
+                <div class="space-y-1 md:col-span-1">
+                    {{ form.email.label(class_='text-xs font-medium text-gray-600') }}
+                    <div class="relative">
+                        <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><i class="fas fa-envelope"></i></span>
+                        {{ form.email(class_='w-full rounded-md border-gray-300 pl-9 pr-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500', placeholder='Enter email address') }}
+                    </div>
+                    {% if form.email.errors %}<p class="text-xs text-red-600">{{ form.email.errors[0] }}</p>{% endif %}
+                </div>
+                <!-- Role -->
+                <div class="space-y-1 md:col-span-1">
+                    {{ form.role.label(class_='text-xs font-medium text-gray-600') }}
+                    <div class="relative">
+                        <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><i class="fas fa-user-tag"></i></span>
+                        {{ form.role(class_='w-full rounded-md border-gray-300 pl-9 pr-8 py-2 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500') }}
+                    </div>
+                    {% if form.role.errors %}<p class="text-xs text-red-600">{{ form.role.errors[0] }}</p>{% endif %}
+                </div>
+                <!-- Password -->
+                <div class="space-y-1 md:col-span-1">
+                    {{ form.password.label(class_='text-xs font-medium text-gray-600') }}
+                    <div class="relative">
+                        <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><i class="fas fa-lock"></i></span>
+                        {{ form.password(class_='w-full rounded-md border-gray-300 pl-9 pr-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500', placeholder='Enter password') }}
+                    </div>
+                    {% if form.password.errors %}<p class="text-xs text-red-600">{{ form.password.errors[0] }}</p>{% endif %}
+                </div>
+                <!-- Generate Password Checkbox -->
+                <div class="md:col-span-2">
+                    <label class="flex items-start gap-3 rounded-md border border-gray-200 bg-gray-50 px-4 py-3 text-sm hover:bg-gray-100 cursor-pointer">
+                        <input type="checkbox" id="generatePassword" class="mt-1 h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500" checked>
+                        <span class="flex-1"><span class="block font-medium text-gray-800">Generate random password</span><span class="block text-xs text-gray-500">If checked, a random password will be generated and displayed after creation.</span></span>
+                    </label>
+                </div>
+            </div>
+        </section>
+        <div class="flex items-center gap-3">
+            {{ form.submit(class_='inline-flex items-center gap-2 rounded-md bg-primary-600 px-6 py-2.5 text-sm font-semibold text-white shadow hover:bg-primary-700') }}
+            <a href="{{ url_for('admin_users') }}" class="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"><i class="fas fa-arrow-left"></i>Back to Users</a>
+        </div>
+    </form>
 </div>
-
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const generatePasswordCheckbox = document.getElementById('generatePassword');
-    const passwordField = document.getElementById('password');
-    
-    function togglePasswordField() {
-        if (generatePasswordCheckbox.checked) {
-            passwordField.disabled = true;
-            passwordField.placeholder = "Password will be generated automatically";
-        } else {
-            passwordField.disabled = false;
-            passwordField.placeholder = "Enter password";
-        }
+document.addEventListener('DOMContentLoaded', function(){
+    const cb = document.getElementById('generatePassword');
+    const pwd = document.getElementById('password');
+    function sync(){
+        if(!pwd) return;
+        if(cb.checked){
+            pwd.disabled = true; pwd.placeholder='Password will be generated automatically'; pwd.classList.add('bg-gray-100','cursor-not-allowed');
+        } else { pwd.disabled=false; pwd.placeholder='Enter password'; pwd.classList.remove('bg-gray-100','cursor-not-allowed'); }
     }
-    
-    generatePasswordCheckbox.addEventListener('change', togglePasswordField);
-    togglePasswordField(); // Initialize on page load
+    if(cb && pwd){ cb.addEventListener('change', sync); sync(); }
 });
 </script>
 {% endblock %}

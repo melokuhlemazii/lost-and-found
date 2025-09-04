@@ -1,236 +1,139 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div class="container py-4">
-    <!-- Page Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="space-y-8">
+    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
-            <h1 class="mb-0">
-                <i class="fas fa-clipboard-list me-2"></i>Manage Claims
-            </h1>
-            <p class="text-muted mb-0">Review and process item claims</p>
+            <h1 class="text-2xl font-semibold tracking-tight flex items-center gap-2"><i class="fas fa-clipboard-list text-primary-600"></i><span>Manage Claims</span></h1>
+            <p class="text-sm text-gray-600">Review and process item claim submissions.</p>
         </div>
-        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
-        </a>
+        <a href="{{ url_for('admin_dashboard') }}" class="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium shadow-sm hover:bg-gray-50"><i class="fas fa-arrow-left"></i>Dashboard</a>
     </div>
 
-    <!-- Filters Section -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h2 class="h4 mb-0">
-                <i class="fas fa-filter me-2"></i>Filters & Sorting
-            </h2>
-        </div>
-        <div class="card-body">
-            <form method="GET" action="{{ url_for('admin_claims') }}" class="row g-3">
-                <div class="col-md-3">
-                    <label for="status" class="form-label">Status</label>
-                    <select name="status" id="status" class="form-select">
-                        <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Status</option>
-                        <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
-                        <option value="approved" {% if status_filter == 'approved' %}selected{% endif %}>Approved</option>
-                        <option value="rejected" {% if status_filter == 'rejected' %}selected{% endif %}>Rejected</option>
-                    </select>
-                </div>
-                
-                <div class="col-md-3">
-                    <label for="item_type" class="form-label">Item Type</label>
-                    <select name="item_type" id="item_type" class="form-select">
-                        <option value="all" {% if item_type_filter == 'all' %}selected{% endif %}>All Types</option>
-                        <option value="lost" {% if item_type_filter == 'lost' %}selected{% endif %}>Lost Items</option>
-                        <option value="found" {% if item_type_filter == 'found' %}selected{% endif %}>Found Items</option>
-                    </select>
-                </div>
-                
-                <div class="col-md-3">
-                    <label for="sort" class="form-label">Sort By</label>
-                    <select name="sort" id="sort" class="form-select">
-                        <option value="created_at" {% if sort_by == 'created_at' %}selected{% endif %}>Date Created</option>
-                        <option value="full_names" {% if sort_by == 'full_names' %}selected{% endif %}>Claimant Name</option>
-                        <option value="status" {% if sort_by == 'status' %}selected{% endif %}>Status</option>
-                        <option value="item_type" {% if sort_by == 'item_type' %}selected{% endif %}>Item Type</option>
-                    </select>
-                </div>
-                
-                <div class="col-md-3">
-                    <label for="order" class="form-label">Order</label>
-                    <select name="order" id="order" class="form-select">
-                        <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Descending</option>
-                        <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Ascending</option>
-                    </select>
-                </div>
-                
-                <div class="col-12">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-search me-2"></i>Apply Filters
-                    </button>
-                </div>
+    <!-- Filters -->
+    <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="border-b px-5 py-3"><h2 class="text-sm font-semibold tracking-wide flex items-center gap-2"><i class="fas fa-filter text-primary-500"></i>Filters & Sorting</h2></div>
+        <div class="p-5">
+            <form method="GET" action="{{ url_for('admin_claims') }}" class="grid gap-4 md:grid-cols-4">
+                <div class="space-y-1"><label class="text-xs font-medium text-gray-600" for="status">Status</label><select name="status" id="status" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500"><option value="all" {% if status_filter=='all' %}selected{% endif %}>All Status</option><option value="pending" {% if status_filter=='pending' %}selected{% endif %}>Pending</option><option value="approved" {% if status_filter=='approved' %}selected{% endif %}>Approved</option><option value="rejected" {% if status_filter=='rejected' %}selected{% endif %}>Rejected</option></select></div>
+                <div class="space-y-1"><label class="text-xs font-medium text-gray-600" for="item_type">Item Type</label><select name="item_type" id="item_type" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500"><option value="all" {% if item_type_filter=='all' %}selected{% endif %}>All Types</option><option value="lost" {% if item_type_filter=='lost' %}selected{% endif %}>Lost Items</option><option value="found" {% if item_type_filter=='found' %}selected{% endif %}>Found Items</option></select></div>
+                <div class="space-y-1"><label class="text-xs font-medium text-gray-600" for="sort">Sort By</label><select name="sort" id="sort" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500"><option value="created_at" {% if sort_by=='created_at' %}selected{% endif %}>Date Created</option><option value="full_names" {% if sort_by=='full_names' %}selected{% endif %}>Claimant Name</option><option value="status" {% if sort_by=='status' %}selected{% endif %}>Status</option><option value="item_type" {% if sort_by=='item_type' %}selected{% endif %}>Item Type</option></select></div>
+                <div class="space-y-1"><label class="text-xs font-medium text-gray-600" for="order">Order</label><select name="order" id="order" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500"><option value="desc" {% if sort_order=='desc' %}selected{% endif %}>Descending</option><option value="asc" {% if sort_order=='asc' %}selected{% endif %}>Ascending</option></select></div>
+                <div class="md:col-span-4 flex justify-end pt-2"><button type="submit" class="inline-flex items-center gap-2 rounded-md bg-primary-600 px-5 py-2 text-sm font-semibold text-white shadow hover:bg-primary-700"><i class="fas fa-magnifying-glass"></i>Apply Filters</button></div>
             </form>
         </div>
     </div>
 
-    <!-- Claims Table -->
-    <div class="card">
-        <div class="card-header">
-            <h2 class="h4 mb-0">
-                <i class="fas fa-list me-2"></i>Claims ({{ claims.total }} total)
-            </h2>
-        </div>
-        <div class="card-body">
+    <!-- Table -->
+    <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <div class="flex items-center justify-between border-b px-5 py-3"><h2 class="text-sm font-semibold tracking-wide flex items-center gap-2"><i class="fas fa-list text-primary-500"></i>Claims ({{ claims.total }} total)</h2></div>
+        <div class="overflow-x-auto">
             {% if claims.items %}
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th>ID</th>
-                                <th>Claimant</th>
-                                <th>Student #</th>
-                                <th>Email</th>
-                                <th>Item Type</th>
-                                <th>Description</th>
-                                <th>Status</th>
-                                <th>Admin Notes</th>
-                                <th>Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for claim in claims.items %}
-                            <tr>
-                                <td><strong>{{ claim.id }}</strong></td>
-                                <td>{{ claim.full_names }}</td>
-                                <td>{{ claim.student_number }}</td>
-                                <td>{{ claim.student_email }}</td>
-                                <td>
-                                    <span class="badge {% if claim.item_type == 'lost' %}bg-danger{% else %}bg-success{% endif %}">
-                                        {{ claim.item_type.title() }}
-                                    </span>
-                                </td>
-                                <td>{{ claim.description[:50] }}{% if claim.description|length > 50 %}...{% endif %}</td>
-                                <td>
-                                    <span class="badge {% if claim.status == 'pending' %}bg-warning text-dark{% elif claim.status == 'approved' %}bg-success{% elif claim.status == 'rejected' %}bg-danger{% else %}bg-secondary{% endif %}">
-                                        {{ claim.status.title() }}
-                                    </span>
-                                </td>
-                                <td>{{ claim.admin_notes[:30] if claim.admin_notes else 'No notes' }}{% if claim.admin_notes and claim.admin_notes|length > 30 %}...{% endif %}</td>
-                                <td>{{ claim.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
-                                <td>
-                                    <div class="btn-group-vertical btn-group-sm" role="group">
-                                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#updateClaimModal" data-claim-id="{{ claim.id }}" data-claim-status="{{ claim.status }}" data-claim-notes="{{ claim.admin_notes or '' }}">
-                                            <i class="fas fa-edit me-1"></i>Update
-                                        </button>
-                                        <form method="POST" action="{{ url_for('admin_delete_claim', claim_id=claim.id) }}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this claim?')">
-                                            <button type="submit" class="btn btn-outline-danger btn-sm">
-                                                <i class="fas fa-trash me-1"></i>Delete
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                
-                <!-- Pagination -->
-                <nav aria-label="Claims pagination">
-                    <ul class="pagination justify-content-center">
-                        {% if claims.has_prev %}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('admin_claims', page=claims.prev_num, status=status_filter, item_type=item_type_filter, sort=sort_by, order=sort_order) }}">
-                                    <i class="fas fa-chevron-left me-1"></i>Previous
-                                </a>
-                            </li>
-                        {% else %}
-                            <li class="page-item disabled">
-                                <span class="page-link">Previous</span>
-                            </li>
-                        {% endif %}
-                        
-                        <li class="page-item active">
-                            <span class="page-link">Page {{ claims.page }} of {{ claims.pages }}</span>
-                        </li>
-                        
-                        {% if claims.has_next %}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('admin_claims', page=claims.next_num, status=status_filter, item_type=item_type_filter, sort=sort_by, order=sort_order) }}">
-                                    Next<i class="fas fa-chevron-right ms-1"></i>
-                                </a>
-                            </li>
-                        {% else %}
-                            <li class="page-item disabled">
-                                <span class="page-link">Next</span>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </nav>
+            <table class="min-w-full text-sm">
+                <thead class="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-600">
+                    <tr>
+                        <th class="px-4 py-2 font-semibold">ID</th>
+                        <th class="px-4 py-2 font-semibold">Claimant</th>
+                        <th class="px-4 py-2 font-semibold">Student #</th>
+                        <th class="px-4 py-2 font-semibold">Email</th>
+                        <th class="px-4 py-2 font-semibold">Item Type</th>
+                        <th class="px-4 py-2 font-semibold">Description</th>
+                        <th class="px-4 py-2 font-semibold">Status</th>
+                        <th class="px-4 py-2 font-semibold">Admin Notes</th>
+                        <th class="px-4 py-2 font-semibold">Date</th>
+                        <th class="px-4 py-2 font-semibold">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for claim in claims.items %}
+                    {% set type_badge = 'bg-gray-100 text-gray-700' %}
+                    {% if claim.item_type=='lost' %}{% set type_badge='bg-red-100 text-red-700' %}{% elif claim.item_type=='found' %}{% set type_badge='bg-indigo-100 text-indigo-700' %}{% endif %}
+                    {% set status_badge = 'bg-gray-100 text-gray-700' %}
+                    {% if claim.status=='pending' %}{% set status_badge='bg-amber-100 text-amber-700' %}
+                    {% elif claim.status=='approved' %}{% set status_badge='bg-emerald-100 text-emerald-700' %}
+                    {% elif claim.status=='rejected' %}{% set status_badge='bg-red-100 text-red-700' %}{% endif %}
+                    <tr class="hover:bg-gray-50/70">
+                        <td class="px-4 py-2 font-medium text-gray-800">{{ claim.id }}</td>
+                        <td class="px-4 py-2 text-gray-700">{{ claim.full_names }}</td>
+                        <td class="px-4 py-2 text-gray-600">{{ claim.student_number }}</td>
+                        <td class="px-4 py-2 text-gray-600">{{ claim.student_email }}</td>
+                        <td class="px-4 py-2"><span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold {{ type_badge }}">{{ claim.item_type }}</span></td>
+                        <td class="px-4 py-2 text-gray-600">{{ claim.description[:50] }}{% if claim.description|length>50 %}...{% endif %}</td>
+                        <td class="px-4 py-2"><span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold {{ status_badge }}">{{ claim.status }}</span></td>
+                        <td class="px-4 py-2 text-gray-600">{{ claim.admin_notes[:30] if claim.admin_notes else 'No notes' }}{% if claim.admin_notes and claim.admin_notes|length>30 %}...{% endif %}</td>
+                        <td class="px-4 py-2 text-gray-600">{{ claim.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td class="px-4 py-2 w-[160px]">
+                            <div class="flex flex-col gap-2">
+                                <button type="button" class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white shadow hover:bg-indigo-700" data-claim-id="{{ claim.id }}" data-claim-status="{{ claim.status }}" data-claim-notes="{{ claim.admin_notes or '' }}" onclick="openClaimDialog(this)"><i class="fas fa-pen mr-1"></i>Edit</button>
+                                <form method="POST" action="{{ url_for('admin_delete_claim', claim_id=claim.id) }}" onsubmit="return confirm('Delete this claim?')">
+                                    <button type="submit" class="inline-flex items-center justify-center rounded-md bg-red-600 px-3 py-1.5 text-xs font-semibold text-white shadow hover:bg-red-700"><i class="fas fa-trash mr-1"></i>Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             {% else %}
-                <div class="alert alert-info text-center">
-                    <i class="fas fa-info-circle me-2"></i>No claims found matching your criteria.
-                </div>
+            <p class="p-6 text-center text-sm text-gray-500">No claims found matching filters.</p>
             {% endif %}
         </div>
+        {% if claims.items %}
+        <div class="border-t bg-gray-50 px-4 py-3 flex items-center justify-between text-xs text-gray-600">
+            <div>Page {{ claims.page }} of {{ claims.pages }}</div>
+            <div class="flex items-center gap-2">{% if claims.has_prev %}<a href="{{ url_for('admin_claims', page=claims.prev_num, status=status_filter, item_type=item_type_filter, sort=sort_by, order=sort_order) }}" class="inline-flex items-center rounded-md border border-gray-200 bg-white px-2 py-1 font-medium hover:bg-gray-50">Prev</a>{% else %}<span class="inline-flex items-center rounded-md border border-gray-100 bg-gray-100 px-2 py-1 text-gray-400">Prev</span>{% endif %}{% if claims.has_next %}<a href="{{ url_for('admin_claims', page=claims.next_num, status=status_filter, item_type=item_type_filter, sort=sort_by, order=sort_order) }}" class="inline-flex items-center rounded-md border border-gray-200 bg-white px-2 py-1 font-medium hover:bg-gray-50">Next</a>{% else %}<span class="inline-flex items-center rounded-md border border-gray-100 bg-gray-100 px-2 py-1 text-gray-400">Next</span>{% endif %}</div>
+        </div>
+        {% endif %}
     </div>
 </div>
 
-<!-- Update Claim Modal (placed outside table container) -->
-<div class="modal fade" id="updateClaimModal" tabindex="-1" aria-labelledby="updateClaimModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="updateClaimModalLabel">Update Claim</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- Claim Update Dialog -->
+<div id="claimDialog" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeClaimDialog()"></div>
+    <div class="relative mx-auto mt-24 w-full max-w-lg px-4">
+        <div class="rounded-xl border border-gray-200 bg-white shadow-xl">
+            <div class="flex items-center justify-between border-b px-5 py-3">
+                <h3 id="claimDialogTitle" class="text-sm font-semibold tracking-wide flex items-center gap-2"><i class="fas fa-pen text-primary-500"></i>Update Claim</h3>
+                <button type="button" onclick="closeClaimDialog()" class="rounded-md p-1 text-gray-500 hover:bg-gray-100"><i class="fas fa-xmark"></i></button>
             </div>
-            <div class="modal-body">
-                <form id="updateClaimForm" method="POST">
-                    {{ form.hidden_tag() }}
-                    <div class="mb-3">
-                        <label for="status" class="form-label">Status</label>
-                        <select name="status" id="status" class="form-control" required>
-                            <option value="pending">Pending</option>
-                            <option value="approved">Approved</option>
-                            <option value="rejected">Rejected</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="admin_notes" class="form-label">Admin Notes</label>
-                        <textarea name="admin_notes" id="admin_notes" class="form-control" rows="3" placeholder="Admin notes (optional)"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-success">
-                        <i class="fas fa-save me-1"></i>Save Changes
-                    </button>
-                </form>
-            </div>
+            <form id="claimUpdateForm" method="POST" class="p-5 space-y-5">
+                {{ form.hidden_tag() }}
+                <div class="space-y-1">
+                    <label for="claim_status" class="text-xs font-medium text-gray-600">Status</label>
+                    <select id="claim_status" name="status" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500" required>
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+                <div class="space-y-1">
+                    <label for="claim_notes" class="text-xs font-medium text-gray-600">Admin Notes</label>
+                    <textarea id="claim_notes" name="admin_notes" rows="4" placeholder="Internal notes (optional)" class="w-full resize-none rounded-md border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500"></textarea>
+                </div>
+                <div class="flex items-center justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeClaimDialog()" class="inline-flex items-center rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium shadow-sm hover:bg-gray-50">Cancel</button>
+                    <button type="submit" class="inline-flex items-center gap-2 rounded-md bg-primary-600 px-5 py-2 text-sm font-semibold text-white shadow hover:bg-primary-700"><i class="fas fa-save"></i>Save</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const updateModal = document.getElementById('updateClaimModal');
-    const updateForm = document.getElementById('updateClaimForm');
-    const statusSelect = document.getElementById('status');
-    const adminNotesTextarea = document.getElementById('admin_notes');
-    
-    // Handle modal show event
-    updateModal.addEventListener('show.bs.modal', function(event) {
-        const button = event.relatedTarget;
-        const claimId = button.getAttribute('data-claim-id');
-        const claimStatus = button.getAttribute('data-claim-status');
-        const claimNotes = button.getAttribute('data-claim-notes');
-        
-        // Update modal title
-        const modalTitle = updateModal.querySelector('.modal-title');
-        modalTitle.textContent = 'Update Claim #' + claimId;
-        
-        // Set form action
-        updateForm.action = '/admin/update-claim/' + claimId;
-        
-        // Set current values
-        statusSelect.value = claimStatus;
-        adminNotesTextarea.value = claimNotes;
-    });
-});
+function openClaimDialog(btn){
+    const id = btn.getAttribute('data-claim-id');
+    const status = btn.getAttribute('data-claim-status');
+    const notes = btn.getAttribute('data-claim-notes') || '';
+    document.getElementById('claimDialogTitle').innerHTML = '<i class="fas fa-pen text-primary-500"></i> Update Claim #' + id;
+    document.getElementById('claim_status').value = status;
+    document.getElementById('claim_notes').value = notes;
+    const form = document.getElementById('claimUpdateForm');
+    form.action = '/admin/update-claim/' + id;
+    document.getElementById('claimDialog').classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+}
+function closeClaimDialog(){
+    document.getElementById('claimDialog').classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
+}
 </script>
 {% endblock %}

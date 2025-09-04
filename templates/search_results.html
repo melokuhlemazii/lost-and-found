@@ -1,108 +1,116 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-lg-4">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h4 class="mb-0"><i class="fas fa-search me-2"></i>Search Items</h4>
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="grid gap-8 lg:grid-cols-12">
+        <!-- Sidebar: Search + Quick Actions -->
+        <div class="lg:col-span-4 space-y-8">
+            <div class="bg-white rounded-lg shadow border border-gray-100 overflow-hidden">
+                <div class="border-b px-5 py-4 flex items-center gap-2">
+                    <h4 class="text-lg font-semibold flex items-center gap-2 text-indigo-600"><i class="fas fa-search"></i><span>Search Items</span></h4>
                 </div>
-                <div class="card-body">
-                    <form method="GET" action="{{ url_for('search_items') }}">
-                        <div class="mb-3">
-                            {{ form.query.label(class="form-label") }}
-                            {{ form.query(class="form-control", placeholder="e.g., 'blue backpack'") }}
-                        </div>
-                        <div class="mb-3">
-                            {{ form.category.label(class="form-label") }}
-                            {{ form.category(class="form-select") }}
-                        </div>
-                        <div class="mb-3">
-                            {{ form.item_type.label(class="form-label") }}
-                            {{ form.item_type(class="form-select") }}
-                        </div>
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">Search</button>
-                            <a href="{{ url_for('search_items') }}" class="btn btn-outline-secondary">Clear Search</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h4>
-                </div>
-                <div class="card-body">
-                    <div class="d-grid gap-2">
-                        <a href="{{ url_for('browse_lost_items') }}" class="btn btn-outline-primary">Browse Lost Items</a>
-                        <a href="{{ url_for('browse_found_items') }}" class="btn btn-outline-info">Browse Found Items</a>
-                        {% if current_user.is_authenticated %}
-                            <a href="{{ url_for('report_lost_item') }}" class="btn btn-outline-danger">Report a Lost Item</a>
-                            <a href="{{ url_for('report_found_item') }}" class="btn btn-outline-success">Report a Found Item</a>
-                        {% endif %}
+                <form method="GET" action="{{ url_for('search_items') }}" class="p-5 space-y-5">
+                    <div class="space-y-1">
+                        {{ form.query.label(class_='text-xs font-medium text-gray-600') }}
+                        {{ form.query(class_='w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500', placeholder="e.g., 'blue backpack'") }}
                     </div>
+                    <div class="space-y-1">
+                        {{ form.category.label(class_='text-xs font-medium text-gray-600') }}
+                        {{ form.category(class_='w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500') }}
+                    </div>
+                        <div class="space-y-1">
+                        {{ form.item_type.label(class_='text-xs font-medium text-gray-600') }}
+                        {{ form.item_type(class_='w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500') }}
+                    </div>
+                    <div class="flex gap-3 pt-2">
+                        <button type="submit" class="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-700"><i class="fas fa-search"></i><span>Search</span></button>
+                        <a href="{{ url_for('search_items') }}" class="inline-flex items-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"><i class="fas fa-times"></i><span>Clear</span></a>
+                    </div>
+                </form>
+            </div>
+            <div class="bg-white rounded-lg shadow border border-gray-100 overflow-hidden">
+                <div class="border-b px-5 py-4 flex items-center gap-2">
+                    <h4 class="text-lg font-semibold flex items-center gap-2 text-amber-600"><i class="fas fa-bolt"></i><span>Quick Actions</span></h4>
+                </div>
+                <div class="p-5 grid gap-3">
+                    <a href="{{ url_for('browse_lost_items') }}" class="flex items-center justify-between rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-100"><span class="flex items-center gap-2"><i class="fas fa-exclamation-triangle"></i>Browse Lost Items</span><i class="fas fa-chevron-right text-xs"></i></a>
+                    <a href="{{ url_for('browse_found_items') }}" class="flex items-center justify-between rounded-md border border-green-200 bg-green-50 px-4 py-2 text-sm font-medium text-green-700 hover:bg-green-100"><span class="flex items-center gap-2"><i class="fas fa-hand-holding-heart"></i>Browse Found Items</span><i class="fas fa-chevron-right text-xs"></i></a>
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('report_lost_item') }}" class="flex items-center justify-between rounded-md border border-pink-200 bg-pink-50 px-4 py-2 text-sm font-medium text-pink-700 hover:bg-pink-100"><span class="flex items-center gap-2"><i class="fas fa-plus-circle"></i>Report Lost Item</span><i class="fas fa-chevron-right text-xs"></i></a>
+                    <a href="{{ url_for('report_found_item') }}" class="flex items-center justify-between rounded-md border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-100"><span class="flex items-center gap-2"><i class="fas fa-plus"></i>Report Found Item</span><i class="fas fa-chevron-right text-xs"></i></a>
+                    {% endif %}
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-8">
-            <h2 class="mb-4">Search Results</h2>
-
+        <!-- Results -->
+        <div class="lg:col-span-8 space-y-10">
+            <div class="flex items-center gap-2 pb-2 border-b">
+                <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2"><i class="fas fa-list"></i><span>Search Results</span></h2>
+            </div>
             {% if not results.lost and not results.found %}
-                <div class="alert alert-info" role="alert">
-                    <h4 class="alert-heading">No items found!</h4>
-                    <p>No items matched your search criteria. Try broadening your search or use the quick actions to browse all items.</p>
+                <div class="bg-blue-50 border border-blue-100 rounded-lg p-6">
+                    <div class="flex items-start gap-4">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600"><i class="fas fa-info"></i></div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-blue-700 mb-1">No items found!</h4>
+                            <p class="text-sm text-blue-700/80">No items matched your search criteria. Try broadening your search or use the quick actions to browse all items.</p>
+                        </div>
+                    </div>
                 </div>
             {% else %}
                 {% if results.lost %}
-                    <h3 class="mb-3">Lost Items ({{ results.lost|length }} found)</h3>
-                    <div class="row row-cols-1 row-cols-md-2 g-4">
-                        {% for item in results.lost %}
-                            <div class="col">
-                                <div class="item-card h-100">
-                                    {% if item.photo_filename %}
-                                        <img src="{{ url_for('uploaded_file', filename=item.photo_filename) }}" class="item-photo" alt="{{ item.item_name }}">
-                                    {% else %}
-                                        <img src="{{ url_for('static', filename='images/placeholder.png') }}" class="item-photo" alt="{{ item.item_name }}">
-                                    {% endif %}
-                                    <div class="item-card-body">
-                                        <h5>{{ item.item_name }}</h5>
-                                        <p class="mb-1"><small class="text-muted">Category: {{ item.category }}</small></p>
-                                        <p class="mb-1"><small class="text-muted">Lost at: {{ item.location }}</small></p>
-                                        <p class="mb-1"><small class="text-muted">Date: {{ item.created_at.strftime('%Y-%m-%d') }}</small></p>
-                                        <a href="{{ url_for('lost_item_detail', item_id=item.id) }}" class="btn btn-sm btn-outline-primary mt-2">View Details</a>
-                                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-xl font-semibold text-red-600 flex items-center gap-2"><i class="fas fa-exclamation-triangle"></i><span>Lost Items ({{ results.lost|length }} found)</span></h3>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            {% for item in results.lost %}
+                            <div class="bg-white rounded-lg shadow border border-gray-100 p-4 flex flex-col">
+                                {% if item.photo_filename %}
+                                    <img src="{{ url_for('uploaded_file', filename=item.photo_filename) }}" alt="{{ item.item_name }}" class="w-full h-40 object-cover rounded mb-3">
+                                {% else %}
+                                    <div class="w-full h-40 flex items-center justify-center bg-gray-100 rounded mb-3"><i class="fas fa-image text-gray-300 text-4xl"></i></div>
+                                {% endif %}
+                                <h5 class="font-bold text-lg mb-1 line-clamp-1">{{ item.item_name }}</h5>
+                                <p class="text-gray-500 text-sm mb-1 flex items-center gap-1"><i class="fas fa-tag"></i>{{ item.category }}</p>
+                                <p class="text-gray-500 text-sm mb-1 flex items-center gap-1"><i class="fas fa-map-marker-alt"></i>{{ item.location }}</p>
+                                <p class="text-gray-500 text-sm mb-2 flex items-center gap-1"><i class="fas fa-calendar"></i>{{ item.created_at.strftime('%Y-%m-%d') }}</p>
+                                <div class="mt-auto flex items-center justify-between">
+                                    <span class="px-2 py-1 rounded text-xs font-semibold bg-yellow-100 text-yellow-700">Lost</span>
+                                    <a href="{{ url_for('lost_item_detail', item_id=item.id) }}" class="inline-flex items-center gap-1 rounded bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-700"><i class="fas fa-eye"></i>View</a>
                                 </div>
                             </div>
-                        {% endfor %}
+                            {% endfor %}
+                        </div>
+                        <div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-4"></div>
                     </div>
-                    <hr class="my-4">
                 {% endif %}
 
                 {% if results.found %}
-                    <h3 class="mb-3">Found Items ({{ results.found|length }} found)</h3>
-                    <div class="row row-cols-1 row-cols-md-2 g-4">
-                        {% for item in results.found %}
-                            <div class="col">
-                                <div class="item-card h-100">
-                                    {% if item.photo_filename %}
-                                        <img src="{{ url_for('uploaded_file', filename=item.photo_filename) }}" class="item-photo" alt="{{ item.item_name }}">
-                                    {% else %}
-                                        <img src="{{ url_for('static', filename='images/placeholder.png') }}" class="item-photo" alt="{{ item.item_name }}">
-                                    {% endif %}
-                                    <div class="item-card-body">
-                                        <h5>{{ item.item_name }}</h5>
-                                        <p class="mb-1"><small class="text-muted">Category: {{ item.category }}</small></p>
-                                        <p class="mb-1"><small class="text-muted">Found at: {{ item.location }}</small></p>
-                                        <p class="mb-1"><small class="text-muted">Current location: {{ item.current_location }}</small></p>
-                                        <p class="mb-1"><small class="text-muted">Date: {{ item.created_at.strftime('%Y-%m-%d') }}</small></p>
-                                        <a href="{{ url_for('found_item_detail', item_id=item.id) }}" class="btn btn-sm btn-outline-primary mt-2">View Details</a>
-                                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-xl font-semibold text-emerald-600 flex items-center gap-2"><i class="fas fa-hand-holding-heart"></i><span>Found Items ({{ results.found|length }} found)</span></h3>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            {% for item in results.found %}
+                            <div class="bg-white rounded-lg shadow border border-gray-100 p-4 flex flex-col">
+                                {% if item.photo_filename %}
+                                    <img src="{{ url_for('uploaded_file', filename=item.photo_filename) }}" alt="{{ item.item_name }}" class="w-full h-40 object-cover rounded mb-3">
+                                {% else %}
+                                    <div class="w-full h-40 flex items-center justify-center bg-gray-100 rounded mb-3"><i class="fas fa-image text-gray-300 text-4xl"></i></div>
+                                {% endif %}
+                                <h5 class="font-bold text-lg mb-1 line-clamp-1">{{ item.item_name }}</h5>
+                                <p class="text-gray-500 text-sm mb-1 flex items-center gap-1"><i class="fas fa-tag"></i>{{ item.category }}</p>
+                                <p class="text-gray-500 text-sm mb-1 flex items-center gap-1"><i class="fas fa-map-marker-alt"></i>{{ item.location }}</p>
+                                <p class="text-gray-500 text-sm mb-1 flex items-center gap-1"><i class="fas fa-location-dot"></i>{{ item.current_location }}</p>
+                                <p class="text-gray-500 text-sm mb-2 flex items-center gap-1"><i class="fas fa-calendar"></i>{{ item.created_at.strftime('%Y-%m-%d') }}</p>
+                                <div class="mt-auto flex items-center justify-between">
+                                    <span class="px-2 py-1 rounded text-xs font-semibold bg-emerald-100 text-emerald-700">Found</span>
+                                    <a href="{{ url_for('found_item_detail', item_id=item.id) }}" class="inline-flex items-center gap-1 rounded bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-700"><i class="fas fa-eye"></i>View</a>
                                 </div>
                             </div>
-                        {% endfor %}
+                            {% endfor %}
+                        </div>
                     </div>
                 {% endif %}
             {% endif %}

@@ -1,82 +1,17 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div class="container py-4">
-    <h1 class="mb-4">Activity Logs</h1>
-
-    <div class="card">
-        <div class="card-header">
-            <h2 class="h4 mb-0">Recent Activities ({{ activities.total }} total)</h2>
+<div class="space-y-8">
+    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div>
+            <h1 class="text-2xl font-semibold tracking-tight flex items-center gap-2"><i class="fas fa-clipboard-list text-primary-600"></i><span>Activity Logs</span></h1>
+            <p class="text-sm text-gray-600">Recent system and user actions.</p>
         </div>
-        <div class="card-body">
-            {% if activities.items %}
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th>ID</th>
-                                <th>User</th>
-                                <th>Action</th>
-                                <th>Details</th>
-                                <th>IP Address</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for activity in activities.items %}
-                            <tr>
-                                <td>{{ activity.id }}</td>
-                                <td>{{ activity.user.username if activity.user else 'Unknown' }}</td>
-                                <td>{{ activity.action }}</td>
-                                <td>{{ activity.details or 'No details' }}</td>
-                                <td>{{ activity.ip_address or 'Unknown' }}</td>
-                                <td>{{ activity.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                
-                <!-- Pagination -->
-                <nav aria-label="Activity logs pagination">
-                    <ul class="pagination justify-content-center">
-                        {% if activities.has_prev %}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('admin_activity_logs', page=activities.prev_num) }}">Previous</a>
-                            </li>
-                        {% else %}
-                            <li class="page-item disabled">
-                                <span class="page-link">Previous</span>
-                            </li>
-                        {% endif %}
-                        
-                        <li class="page-item active">
-                            <span class="page-link">
-                                Page {{ activities.page }} of {{ activities.pages }}
-                            </span>
-                        </li>
-                        
-                        {% if activities.has_next %}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('admin_activity_logs', page=activities.next_num) }}">Next</a>
-                            </li>
-                        {% else %}
-                            <li class="page-item disabled">
-                                <span class="page-link">Next</span>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </nav>
-            {% else %}
-                <p class="text-center text-muted">No activity logs found.</p>
-            {% endif %}
-        </div>
+        <a href="{{ url_for('admin_dashboard') }}" class="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium shadow-sm hover:bg-gray-50"><i class="fas fa-arrow-left"></i>Dashboard</a>
     </div>
-
-    <div class="mt-4">
-        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
-        </a>
+    <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <div class="flex items-center justify-between border-b px-5 py-3"><h2 class="text-sm font-semibold tracking-wide flex items-center gap-2"><i class="fas fa-database text-primary-500"></i>Recent Activities ({{ activities.total }} total)</h2></div>
+        <div class="overflow-x-auto">{% if activities.items %}<table class="min-w-full text-sm"><thead class="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-600"><tr><th class="px-4 py-2 font-semibold">ID</th><th class="px-4 py-2 font-semibold">User</th><th class="px-4 py-2 font-semibold">Action</th><th class="px-4 py-2 font-semibold">Details</th><th class="px-4 py-2 font-semibold">IP Address</th><th class="px-4 py-2 font-semibold">Date</th></tr></thead><tbody class="divide-y divide-gray-100">{% for activity in activities.items %}<tr class="hover:bg-gray-50/70"><td class="px-4 py-2 text-gray-600">{{ activity.id }}</td><td class="px-4 py-2 text-gray-700">{{ activity.user.username if activity.user else 'Unknown' }}</td><td class="px-4 py-2 text-gray-700">{{ activity.action }}</td><td class="px-4 py-2 text-gray-600">{{ activity.details or 'No details' }}</td><td class="px-4 py-2 text-gray-600">{{ activity.ip_address or 'Unknown' }}</td><td class="px-4 py-2 text-gray-600">{{ activity.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td></tr>{% endfor %}</tbody></table>{% else %}<p class="p-6 text-center text-sm text-gray-500">No activity logs found.</p>{% endif %}</div>
+        {% if activities.items %}<div class="border-t bg-gray-50 px-4 py-3 flex items-center justify-between text-xs text-gray-600"><div>Page {{ activities.page }} of {{ activities.pages }}</div><div class="flex items-center gap-2">{% if activities.has_prev %}<a href="{{ url_for('admin_activity_logs', page=activities.prev_num) }}" class="inline-flex items-center rounded-md border border-gray-200 bg-white px-2 py-1 font-medium hover:bg-gray-50">Prev</a>{% else %}<span class="inline-flex items-center rounded-md border border-gray-100 bg-gray-100 px-2 py-1 text-gray-400">Prev</span>{% endif %}{% if activities.has_next %}<a href="{{ url_for('admin_activity_logs', page=activities.next_num) }}" class="inline-flex items-center rounded-md border border-gray-200 bg-white px-2 py-1 font-medium hover:bg-gray-50">Next</a>{% else %}<span class="inline-flex items-center rounded-md border border-gray-100 bg-gray-100 px-2 py-1 text-gray-400">Next</span>{% endif %}</div></div>{% endif %}
     </div>
 </div>
 {% endblock %}

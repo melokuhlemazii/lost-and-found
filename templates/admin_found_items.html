@@ -1,174 +1,136 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div class="container py-4">
-    <h1 class="mb-4">Manage Found Items</h1>
-
-    <div class="card mb-4">
-        <div class="card-header">
-            <h2 class="h4 mb-0">Filters</h2>
+<div class="space-y-8">
+    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div>
+            <h1 class="text-2xl font-semibold tracking-tight flex items-center gap-2"><i class="fas fa-hand-holding-heart text-indigo-600"></i><span>Manage Found Items</span></h1>
+            <p class="text-sm text-gray-600">Filter, verify and track found item reports.</p>
         </div>
-        <div class="card-body">
-            <form method="GET" action="{{ url_for('admin_found_items') }}" class="row g-3">
-                <div class="col-md-3">
-                    <label for="status" class="form-label">Status:</label>
-                    <select name="status" id="status" class="form-select">
-                        <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Status</option>
-                        <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active</option>
-                        <option value="claimed" {% if status_filter == 'claimed' %}selected{% endif %}>Claimed</option>
-                        <option value="returned" {% if status_filter == 'returned' %}selected{% endif %}>Returned</option>
-                        <option value="expired" {% if status_filter == 'expired' %}selected{% endif %}>Expired</option>
+    </div>
+
+    <!-- Filters -->
+    <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="border-b px-5 py-3"><h2 class="text-sm font-semibold tracking-wide flex items-center gap-2"><i class="fas fa-filter text-primary-500"></i>Filters</h2></div>
+        <div class="p-5">
+            <form method="GET" action="{{ url_for('admin_found_items') }}" class="grid gap-4 md:grid-cols-6">
+                <div class="md:col-span-2 space-y-1">
+                    <label for="status" class="text-xs font-medium text-gray-600">Status</label>
+                    <select name="status" id="status" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500">
+                        <option value="all" {% if status_filter=='all' %}selected{% endif %}>All Status</option>
+                        <option value="active" {% if status_filter=='active' %}selected{% endif %}>Active</option>
+                        <option value="claimed" {% if status_filter=='claimed' %}selected{% endif %}>Claimed</option>
+                        <option value="returned" {% if status_filter=='returned' %}selected{% endif %}>Returned</option>
+                        <option value="expired" {% if status_filter=='expired' %}selected{% endif %}>Expired</option>
                     </select>
                 </div>
-                
-                <div class="col-md-3">
-                    <label for="category" class="form-label">Category:</label>
-                    <select name="category" id="category" class="form-select">
-                        <option value="all" {% if category_filter == 'all' %}selected{% endif %}>All Categories</option>
-                        <option value="electronics" {% if category_filter == 'electronics' %}selected{% endif %}>Electronics</option>
-                        <option value="bags" {% if category_filter == 'bags' %}selected{% endif %}>Bags</option>
-                        <option value="books" {% if category_filter == 'books' %}selected{% endif %}>Books</option>
-                        <option value="personal_items" {% if category_filter == 'personal_items' %}selected{% endif %}>Personal Items</option>
-                        <option value="clothing" {% if category_filter == 'clothing' %}selected{% endif %}>Clothing</option>
-                        <option value="jewelry" {% if category_filter == 'jewelry' %}selected{% endif %}>Jewelry</option>
-                        <option value="sports" {% if category_filter == 'sports' %}selected{% endif %}>Sports</option>
-                        <option value="other" {% if category_filter == 'other' %}selected{% endif %}>Other</option>
+                <div class="md:col-span-2 space-y-1">
+                    <label for="category" class="text-xs font-medium text-gray-600">Category</label>
+                    <select name="category" id="category" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500">
+                        <option value="all" {% if category_filter=='all' %}selected{% endif %}>All Categories</option>
+                        <option value="electronics" {% if category_filter=='electronics' %}selected{% endif %}>Electronics</option>
+                        <option value="bags" {% if category_filter=='bags' %}selected{% endif %}>Bags</option>
+                        <option value="books" {% if category_filter=='books' %}selected{% endif %}>Books</option>
+                        <option value="personal_items" {% if category_filter=='personal_items' %}selected{% endif %}>Personal Items</option>
+                        <option value="clothing" {% if category_filter=='clothing' %}selected{% endif %}>Clothing</option>
+                        <option value="jewelry" {% if category_filter=='jewelry' %}selected{% endif %}>Jewelry</option>
+                        <option value="sports" {% if category_filter=='sports' %}selected{% endif %}>Sports</option>
+                        <option value="other" {% if category_filter=='other' %}selected{% endif %}>Other</option>
                     </select>
                 </div>
-                
-                <div class="col-md-2">
-                    <label for="sort" class="form-label">Sort By:</label>
-                    <select name="sort" id="sort" class="form-select">
-                        <option value="created_at" {% if sort_by == 'created_at' %}selected{% endif %}>Date Created</option>
-                        <option value="item_name" {% if sort_by == 'item_name' %}selected{% endif %}>Item Name</option>
-                        <option value="category" {% if sort_by == 'category' %}selected{% endif %}>Category</option>
-                        <option value="status" {% if sort_by == 'status' %}selected{% endif %}>Status</option>
+                <div class="space-y-1">
+                    <label for="sort" class="text-xs font-medium text-gray-600">Sort By</label>
+                    <select name="sort" id="sort" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500">
+                        <option value="created_at" {% if sort_by=='created_at' %}selected{% endif %}>Date Created</option>
+                        <option value="item_name" {% if sort_by=='item_name' %}selected{% endif %}>Item Name</option>
+                        <option value="category" {% if sort_by=='category' %}selected{% endif %}>Category</option>
+                        <option value="status" {% if sort_by=='status' %}selected{% endif %}>Status</option>
                     </select>
                 </div>
-                
-                <div class="col-md-2">
-                    <label for="order" class="form-label">Order:</label>
-                    <select name="order" id="order" class="form-select">
-                        <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Descending</option>
-                        <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Ascending</option>
+                <div class="space-y-1">
+                    <label for="order" class="text-xs font-medium text-gray-600">Order</label>
+                    <select name="order" id="order" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500">
+                        <option value="desc" {% if sort_order=='desc' %}selected{% endif %}>Descending</option>
+                        <option value="asc" {% if sort_order=='asc' %}selected{% endif %}>Ascending</option>
                     </select>
                 </div>
-                
-                <div class="col-md-2 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                <div class="md:col-span-6 flex justify-end">
+                    <button type="submit" class="inline-flex items-center gap-2 rounded-md bg-primary-600 px-5 py-2 text-sm font-semibold text-white shadow hover:bg-primary-700"><i class="fas fa-sliders"></i>Apply Filters</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header">
-            <h2 class="h4 mb-0">Found Items ({{ items.total }} total)</h2>
+    <!-- Table -->
+    <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <div class="flex items-center justify-between border-b px-5 py-3">
+            <h2 class="text-sm font-semibold tracking-wide flex items-center gap-2"><i class="fas fa-database text-primary-500"></i>Found Items ({{ items.total }} total)</h2>
         </div>
-        <div class="card-body">
+        <div class="overflow-x-auto">
             {% if items.items %}
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th>ID</th>
-                                <th>Item Name</th>
-                                <th>Category</th>
-                                <th>Description</th>
-                                <th>Found Location</th>
-                                <th>Current Location</th>
-                                <th>Finder</th>
-                                <th>Status</th>
-                                <th>Photo</th>
-                                <th>Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for item in items.items %}
-                            <tr>
-                                <td>{{ item.id }}</td>
-                                <td>{{ item.item_name }}</td>
-                                <td>{{ item.category }}</td>
-                                <td>{{ item.description[:50] }}{% if item.description|length > 50 %}...{% endif %}</td>
-                                <td>{{ item.location }}</td>
-                                <td>{{ item.current_location }}</td>
-                                <td>{{ item.full_names }}</td>
-                                <td>
-                                    <span class="badge {% if item.status == 'active' %}bg-primary{% elif item.status == 'claimed' %}bg-warning text-dark{% elif item.status == 'returned' %}bg-success{% elif item.status == 'expired' %}bg-secondary{% endif %}">
-                                        {{ item.status }}
-                                    </span>
-                                </td>
-                                <td>
-                                    {% if item.photo_filename %}
-                                        <a href="{{ url_for('static', filename='uploads/' + item.photo_filename) }}" target="_blank" class="btn btn-sm btn-outline-primary">View</a>
-                                    {% else %}
-                                        <span class="text-muted">No Photo</span>
-                                    {% endif %}
-                                </td>
-                                <td>{{ item.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
-                                <td>
-                                    <form method="POST" action="{{ url_for('admin_update_item_status', item_type='found', item_id=item.id) }}" class="d-inline">
-                                        {{ form.hidden_tag() }}
-                                        <select name="status" class="form-select form-select-sm d-inline-block w-auto">
-                                            <option value="active" {% if item.status == 'active' %}selected{% endif %}>Active</option>
-                                            <option value="claimed" {% if item.status == 'claimed' %}selected{% endif %}>Claimed</option>
-                                            <option value="returned" {% if item.status == 'returned' %}selected{% endif %}>Returned</option>
-                                            <option value="expired" {% if item.status == 'expired' %}selected{% endif %}>Expired</option>
-                                        </select>
-                                        <button type="submit" class="btn btn-sm btn-primary">Update</button>
-                                    </form>
-                                    
-                                    <form method="POST" action="{{ url_for('admin_delete_item', item_type='found', item_id=item.id) }}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this item?')">
-                                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                
-                <!-- Pagination -->
-                <nav aria-label="Found items pagination">
-                    <ul class="pagination justify-content-center">
-                        {% if items.has_prev %}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('admin_found_items', page=items.prev_num, status=status_filter, category=category_filter, sort=sort_by, order=sort_order) }}">Previous</a>
-                            </li>
-                        {% else %}
-                            <li class="page-item disabled">
-                                <span class="page-link">Previous</span>
-                            </li>
-                        {% endif %}
-                        
-                        <li class="page-item active">
-                            <span class="page-link">
-                                Page {{ items.page }} of {{ items.pages }}
-                            </span>
-                        </li>
-                        
-                        {% if items.has_next %}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('admin_found_items', page=items.next_num, status=status_filter, category=category_filter, sort=sort_by, order=sort_order) }}">Next</a>
-                            </li>
-                        {% else %}
-                            <li class="page-item disabled">
-                                <span class="page-link">Next</span>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </nav>
+            <table class="min-w-full text-sm">
+                <thead class="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-600">
+                    <tr>
+                        <th class="px-4 py-2 font-semibold">ID</th>
+                        <th class="px-4 py-2 font-semibold">Item Name</th>
+                        <th class="px-4 py-2 font-semibold">Category</th>
+                        <th class="px-4 py-2 font-semibold">Description</th>
+                        <th class="px-4 py-2 font-semibold">Found Location</th>
+                        <th class="px-4 py-2 font-semibold">Current Location</th>
+                        <th class="px-4 py-2 font-semibold">Finder</th>
+                        <th class="px-4 py-2 font-semibold">Status</th>
+                        <th class="px-4 py-2 font-semibold">Photo</th>
+                        <th class="px-4 py-2 font-semibold">Date</th>
+                        <th class="px-4 py-2 font-semibold">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for item in items.items %}
+                    {% set badge='bg-gray-100 text-gray-700' %}
+                    {% if item.status=='active' %}{% set badge='bg-indigo-100 text-indigo-700' %}
+                    {% elif item.status=='claimed' %}{% set badge='bg-amber-100 text-amber-700' %}
+                    {% elif item.status=='returned' %}{% set badge='bg-emerald-100 text-emerald-700' %}
+                    {% elif item.status=='expired' %}{% set badge='bg-gray-200 text-gray-700' %}{% endif %}
+                    <tr class="hover:bg-gray-50/70">
+                        <td class="px-4 py-2 text-gray-600">{{ item.id }}</td>
+                        <td class="px-4 py-2 font-medium text-gray-800">{{ item.item_name }}</td>
+                        <td class="px-4 py-2 text-gray-700">{{ item.category }}</td>
+                        <td class="px-4 py-2 text-gray-600">{{ item.description[:50] }}{% if item.description|length>50 %}...{% endif %}</td>
+                        <td class="px-4 py-2 text-gray-600">{{ item.location }}</td>
+                        <td class="px-4 py-2 text-gray-600">{{ item.current_location }}</td>
+                        <td class="px-4 py-2 text-gray-600">{{ item.full_names }}</td>
+                        <td class="px-4 py-2"><span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold {{ badge }}">{{ item.status }}</span></td>
+                        <td class="px-4 py-2">{% if item.photo_filename %}<a href="{{ url_for('static', filename='uploads/' + item.photo_filename) }}" target="_blank" class="inline-flex items-center rounded-md border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium shadow-sm hover:bg-gray-50">View</a>{% else %}<span class="text-xs text-gray-500">No Photo</span>{% endif %}</td>
+                        <td class="px-4 py-2 text-gray-600">{{ item.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td class="px-4 py-2 w-[190px]">
+                            <form method="POST" action="{{ url_for('admin_update_item_status', item_type='found', item_id=item.id) }}" class="flex items-center gap-2 mb-2">{{ form.hidden_tag() }}
+                                <select name="status" class="rounded-md border-gray-300 text-xs shadow-sm focus:border-primary-500 focus:ring-primary-500">
+                                    <option value="active" {% if item.status=='active' %}selected{% endif %}>Active</option>
+                                    <option value="claimed" {% if item.status=='claimed' %}selected{% endif %}>Claimed</option>
+                                    <option value="returned" {% if item.status=='returned' %}selected{% endif %}>Returned</option>
+                                    <option value="expired" {% if item.status=='expired' %}selected{% endif %}>Expired</option>
+                                </select>
+                                <button type="submit" class="inline-flex items-center rounded-md bg-indigo-600 px-2.5 py-1.5 text-xs font-semibold text-white shadow hover:bg-indigo-700">Upd</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('admin_delete_item', item_type='found', item_id=item.id) }}" onsubmit="return confirm('Delete this item?')">
+                                <button type="submit" class="inline-flex items-center rounded-md bg-red-600 px-2.5 py-1.5 text-xs font-semibold text-white shadow hover:bg-red-700 w-full">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             {% else %}
-                <p class="text-center text-muted">No found items found.</p>
+            <p class="p-6 text-center text-sm text-gray-500">No found items found.</p>
             {% endif %}
         </div>
+        {% if items.items %}
+        <div class="border-t bg-gray-50 px-4 py-3 flex items-center justify-between text-xs text-gray-600">
+            <div>Page {{ items.page }} of {{ items.pages }}</div>
+            <div class="flex items-center gap-2">{% if items.has_prev %}<a href="{{ url_for('admin_found_items', page=items.prev_num, status=status_filter, category=category_filter, sort=sort_by, order=sort_order) }}" class="inline-flex items-center rounded-md border border-gray-200 bg-white px-2 py-1 font-medium hover:bg-gray-50">Prev</a>{% else %}<span class="inline-flex items-center rounded-md border border-gray-100 bg-gray-100 px-2 py-1 text-gray-400">Prev</span>{% endif %}{% if items.has_next %}<a href="{{ url_for('admin_found_items', page=items.next_num, status=status_filter, category=category_filter, sort=sort_by, order=sort_order) }}" class="inline-flex items-center rounded-md border border-gray-200 bg-white px-2 py-1 font-medium hover:bg-gray-50">Next</a>{% else %}<span class="inline-flex items-center rounded-md border border-gray-100 bg-gray-100 px-2 py-1 text-gray-400">Next</span>{% endif %}</div>
+        </div>
+        {% endif %}
     </div>
 
-    <div class="mt-4">
-        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
-        </a>
-    </div>
+    <div><a href="{{ url_for('admin_dashboard') }}" class="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium shadow-sm hover:bg-gray-50"><i class="fas fa-arrow-left"></i>Dashboard</a></div>
 </div>
 {% endblock %}

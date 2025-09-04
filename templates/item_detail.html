@@ -1,78 +1,75 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
-            <div class="card item-details-card fade-in-up">
-                <div class="card-header bg-primary text-white">
-                    <h2 class="mb-0">{{ item_type.title() }} Item Details</h2>
+<div class="max-w-5xl mx-auto">
+  <div class="grid md:grid-cols-5 gap-8">
+    <div class="md:col-span-2">
+        <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+            {% if item.photo_filename %}
+                <div class="aspect-square w-full overflow-hidden rounded-lg bg-gray-100 flex items-center justify-center">
+                    <img src="{{ url_for('uploaded_file', filename=item.photo_filename) }}" alt="{{ item.item_name }}" class="h-full w-full object-cover" />
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-5 text-center">
-                            {% if item.photo_filename %}
-                                <img src="{{ url_for('uploaded_file', filename=item.photo_filename) }}" alt="{{ item.item_name }}" class="img-fluid rounded item-photo mb-3">
-                            {% else %}
-                                <div class="photo-placeholder">
-                                    <i class="fas fa-image fa-5x text-light"></i>
-                                    <p>No Photo Available</p>
-                                </div>
-                            {% endif %}
-                        </div>
-                        <div class="col-md-7">
-                            <h3>{{ item.item_name }}</h3>
-                            <p class="text-muted">{{ item.description }}</p>
-                            <hr>
-                            <dl class="row">
-                                <dt class="col-sm-4">Category</dt>
-                                <dd class="col-sm-8">{{ item.category }}</dd>
-
-                                <dt class="col-sm-4">Status</dt>
-                                <dd class="col-sm-8"><span class="badge bg-{{ 'success' if item.status == 'active' else 'warning' }}">{{ item.status }}</span></dd>
-
-                                <dt class="col-sm-4">Date Reported</dt>
-                                <dd class="col-sm-8">{{ item.created_at.strftime('%Y-%m-%d %H:%M') }}</dd>
-
-                                {% if item_type == 'lost' %}
-                                    <dt class="col-sm-4">Lost At</dt>
-                                    <dd class="col-sm-8">{{ item.location }}</dd>
-                                {% else %}
-                                    <dt class="col-sm-4">Found At</dt>
-                                    <dd class="col-sm-8">{{ item.location }}</dd>
-
-                                    <dt class="col-sm-4">Current Location</dt>
-                                    <dd class="col-sm-8">{{ item.current_location }}</dd>
-                                {% endif %}
-                            </dl>
-                        </div>
-                    </div>
+            {% else %}
+                <div class="aspect-square w-full overflow-hidden rounded-lg bg-gray-100 flex flex-col items-center justify-center text-gray-400">
+                    <i class="fas fa-image text-5xl mb-4"></i>
+                    <p class="text-sm">No Photo Available</p>
                 </div>
-            </div>
-
-            {% if current_user.is_authenticated and item.status == 'active' and current_user.email != item.student_email %}
-            <div class="card mt-4 fade-in-up">
-                <div class="card-body text-center">
-                    <h4 class="card-title">Is This Your Item?</h4>
-                    <p class="card-text">If this item belongs to you, please submit a claim to start the recovery process.</p>
-                    <a href="{{ url_for('claim', item_type=item_type, item_id=item.id) }}" class="btn btn-success btn-lg">
-                        <i class="fas fa-hand-paper me-2"></i>Claim This Item
-                    </a>
-                </div>
-            </div>
             {% endif %}
-
-            <div class="card mt-4 fade-in-up">
-                <div class="card-body text-center">
-                    <h4 class="card-title">Quick Actions</h4>
-                    <a href="{{ url_for('browse_lost_items' if item_type == 'lost' else 'browse_found_items') }}" class="btn btn-outline-secondary m-1"><i class="fas fa-arrow-left me-2"></i>Back to Browse</a>
-                    <a href="{{ url_for('search_items') }}" class="btn btn-outline-primary m-1"><i class="fas fa-search me-2"></i>Search More</a>
-                    {% if current_user.is_authenticated %}
-                        <a href="{{ url_for('user_dashboard') }}" class="btn btn-outline-info m-1"><i class="fas fa-tachometer-alt me-2"></i>My Dashboard</a>
-                    {% endif %}
-                </div>
-            </div>
         </div>
     </div>
+    <div class="md:col-span-3 space-y-6">
+        <div class="flex items-start justify-between gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900 mb-2">{{ item.item_name }}</h1>
+                <p class="text-sm text-gray-600 leading-relaxed">{{ item.description }}</p>
+            </div>
+            {% set status_color = 'bg-green-100 text-green-700 border-green-200' if item.status=='active' else 'bg-amber-100 text-amber-700 border-amber-200' %}
+            <span class="inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium {{ status_color }} capitalize">{{ item.status }}</span>
+        </div>
+        <div class="rounded-xl border border-gray-200 bg-white divide-y divide-gray-200 shadow-sm">
+            <div class="grid grid-cols-3 gap-x-6 gap-y-4 p-6 text-sm">
+                <div class="space-y-1 col-span-3 sm:col-span-1">
+                    <p class="text-xs uppercase tracking-wide text-gray-500">Category</p>
+                    <p class="font-medium text-gray-800">{{ item.category }}</p>
+                </div>
+                <div class="space-y-1 col-span-3 sm:col-span-1">
+                    <p class="text-xs uppercase tracking-wide text-gray-500">Date Reported</p>
+                    <p class="font-medium text-gray-800">{{ item.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                </div>
+                {% if item_type == 'lost' %}
+                <div class="space-y-1 col-span-3 sm:col-span-1">
+                    <p class="text-xs uppercase tracking-wide text-gray-500">Lost At</p>
+                    <p class="font-medium text-gray-800">{{ item.location }}</p>
+                </div>
+                {% else %}
+                <div class="space-y-1 col-span-3 sm:col-span-1">
+                    <p class="text-xs uppercase tracking-wide text-gray-500">Found At</p>
+                    <p class="font-medium text-gray-800">{{ item.location }}</p>
+                </div>
+                <div class="space-y-1 col-span-3 sm:col-span-1">
+                    <p class="text-xs uppercase tracking-wide text-gray-500">Current Location</p>
+                    <p class="font-medium text-gray-800">{{ item.current_location }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% if current_user.is_authenticated and item.status == 'active' and current_user.email != item.student_email %}
+        <div class="rounded-xl border border-primary-200 bg-primary-50 p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div class="flex-1">
+                <h2 class="font-semibold text-primary-900 mb-1">Is This Your Item?</h2>
+                <p class="text-sm text-primary-800">If this item belongs to you, submit a claim to start the recovery process.</p>
+            </div>
+            <a href="{{ url_for('claim', item_type=item_type, item_id=item.id) }}" class="inline-flex items-center gap-2 rounded-md bg-primary-600 px-5 py-2 text-sm font-medium text-white shadow hover:bg-primary-700"><i class="fas fa-hand-paper"></i><span>Claim This Item</span></a>
+        </div>
+        {% endif %}
+        <div class="flex flex-wrap gap-3 pt-2">
+            <a href="{{ url_for('browse_lost_items' if item_type == 'lost' else 'browse_found_items') }}" class="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"><i class="fas fa-arrow-left"></i><span>Back to Browse</span></a>
+            <a href="{{ url_for('search_items') }}" class="inline-flex items-center gap-1 rounded-md border border-primary-200 bg-primary-50 px-4 py-2 text-sm font-medium text-primary-700 shadow-sm hover:bg-primary-100"><i class="fas fa-search"></i><span>Search More</span></a>
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('user_dashboard') }}" class="inline-flex items-center gap-1 rounded-md border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-700 shadow-sm hover:bg-indigo-100"><i class="fas fa-tachometer-alt"></i><span>My Dashboard</span></a>
+            {% endif %}
+        </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

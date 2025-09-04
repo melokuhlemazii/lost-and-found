@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto space-y-8">
+  <!-- Page Header -->
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h1 class="text-2xl font-semibold tracking-tight flex items-center gap-2">
+        <i class="fas fa-id-badge text-primary-600"></i>
+        <span>My Profile</span>
+      </h1>
+      <p class="text-sm text-gray-600">Update your account details.</p>
+    </div>
+    <div class="flex gap-2">
+      <a href="{{ url_for('user_dashboard') }}" class="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium shadow-sm hover:bg-gray-50">
+        <i class="fas fa-gauge"></i><span>Dashboard</span>
+      </a>
+      <a href="{{ url_for('change_password') }}" class="inline-flex items-center gap-2 rounded-md bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-primary-700">
+        <i class="fas fa-key"></i><span>Change Password</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="grid gap-8 md:grid-cols-3">
+    <!-- Profile Form -->
+    <div class="md:col-span-2">
+      <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="border-b px-6 py-4 flex items-center justify-between">
+          <h2 class="text-lg font-medium flex items-center gap-2"><i class="fas fa-user-circle text-primary-500"></i><span>Account Details</span></h2>
+          <span class="inline-flex items-center gap-1 rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-700"><i class="fas fa-shield-halved"></i>{{ current_user.role|title }}</span>
+        </div>
+        <div class="p-6">
+          <form method="POST" novalidate class="space-y-6">
+            {{ form.hidden_tag() }}
+            <div class="grid gap-6 sm:grid-cols-2">
+              <div class="space-y-1.5">
+                <label for="username" class="text-sm font-medium text-gray-700">{{ form.username.label }}</label>
+                {{ form.username(class_='w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500', placeholder='Your username') }}
+                {% if form.username.errors %}
+                  <p class="text-xs text-red-600">{{ form.username.errors[0] }}</p>
+                {% endif %}
+              </div>
+              <div class="space-y-1.5">
+                <label for="email" class="text-sm font-medium text-gray-700">{{ form.email.label }}</label>
+                {{ form.email(class_='w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500', placeholder='you@example.com') }}
+                {% if form.email.errors %}
+                  <p class="text-xs text-red-600">{{ form.email.errors[0] }}</p>
+                {% endif %}
+              </div>
+            </div>
+            <div class="pt-2 flex items-center gap-3">
+              {{ form.submit(class_='inline-flex items-center gap-2 rounded-md bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white shadow hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500') }}
+              <a href="{{ url_for('change_password') }}" class="text-sm font-medium text-primary-600 hover:text-primary-700">Need to change password?</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="space-y-6">
+      <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <div class="px-5 py-4 border-b flex items-center gap-2">
+          <i class="fas fa-circle-info text-primary-500"></i>
+          <h3 class="text-sm font-semibold tracking-wide">Profile Summary</h3>
+        </div>
+        <div class="px-5 py-4 text-sm leading-relaxed space-y-3">
+          <p><span class="font-medium text-gray-700">Username:</span> {{ current_user.username }}</p>
+          <p><span class="font-medium text-gray-700">Email:</span> {{ current_user.email }}</p>
+          <p class="text-xs text-gray-500">Keep your contact details up to date to receive notifications related to your claims and reported items.</p>
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <div class="px-5 py-3 border-b flex items-center gap-2">
+          <i class="fas fa-lightbulb text-amber-500"></i>
+          <h3 class="text-sm font-semibold tracking-wide">Tips</h3>
+        </div>
+        <ul class="px-5 py-4 text-xs space-y-3 text-gray-600">
+          <li class="flex gap-2"><i class="mt-0.5 fas fa-check text-green-500"></i><span>Use a valid email you check frequently.</span></li>
+          <li class="flex gap-2"><i class="mt-0.5 fas fa-check text-green-500"></i><span>Update your username if students should easily search for your reports.</span></li>
+          <li class="flex gap-2"><i class="mt-0.5 fas fa-check text-green-500"></i><span>Change your password regularly for better security.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

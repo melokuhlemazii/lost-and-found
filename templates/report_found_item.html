@@ -1,105 +1,79 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8 col-xl-7">
-            <div class="card form-container fade-in-up">
-                <div class="card-body">
-                    <div class="text-center mb-4">
-                        <i class="fas fa-hand-holding-heart fa-3x text-success mb-3"></i>
-                        <h2>Report a Found Item</h2>
-                        <p class="text-muted">Fill out the form below to report a found item.</p>
-                    </div>
-
-                    <form method="POST" enctype="multipart/form-data" action="{{ url_for('report_found_item') }}">
-                        {{ form.csrf_token }}
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                {{ form.item_name.label(class="form-label") }}
-                                {{ form.item_name(class="form-control", placeholder="e.g., iPhone 13, Blue Backpack") }}
-                                {% for error in form.item_name.errors %}
-                                    <div class="text-danger small mt-1">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                            <div class="col-md-6">
-                                {{ form.category.label(class="form-label") }}
-                                {{ form.category(class="form-select") }}
-                                {% for error in form.category.errors %}
-                                    <div class="text-danger small mt-1">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            {{ form.description.label(class="form-label") }}
-                            {{ form.description(class="form-control", rows="4", placeholder="Provide a detailed description...") }}
-                            {% for error in form.description.errors %}
-                                <div class="text-danger small mt-1">{{ error }}</div>
-                            {% endfor %}
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                {{ form.location.label(class="form-label") }}
-                                {{ form.location(class="form-select") }}
-                                {% for error in form.location.errors %}
-                                    <div class="text-danger small mt-1">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                            <div class="col-md-6">
-                                {{ form.current_location.label(class="form-label") }}
-                                {{ form.current_location(class="form-select") }}
-                                {% for error in form.current_location.errors %}
-                                    <div class="text-danger small mt-1">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                {{ form.full_names.label(class="form-label") }}
-                                {{ form.full_names(class="form-control", placeholder="Your full name") }}
-                                {% for error in form.full_names.errors %}
-                                    <div class="text-danger small mt-1">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                            <div class="col-md-6">
-                                {{ form.student_number.label(class="form-label") }}
-                                {{ form.student_number(class="form-control", placeholder="Your student number") }}
-                                {% for error in form.student_number.errors %}
-                                    <div class="text-danger small mt-1">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            {{ form.student_email.label(class="form-label") }}
-                            {{ form.student_email(class="form-control", placeholder="your.email@university.edu") }}
-                            {% for error in form.student_email.errors %}
-                                <div class="text-danger small mt-1">{{ error }}</div>
-                            {% endfor %}
-                        </div>
-
-                        <div class="mb-3">
-                            {{ form.photo.label(class="form-label") }}
-                            {{ form.photo(class="form-control") }}
-                            {% for error in form.photo.errors %}
-                                <div class="text-danger small mt-1">{{ error }}</div>
-                            {% endfor %}
-                            <small class="text-muted">Supported formats: JPG, PNG, GIF (Max 5MB)</small>
-                        </div>
-
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary me-md-2">Cancel</a>
-                            {{ form.submit(class="btn btn-success") }}
-                        </div>
-                    </form>
-                </div>
+<div class="max-w-3xl mx-auto">
+  <div class="rounded-2xl border border-green-200 bg-white shadow-sm overflow-hidden">
+    <div class="bg-gradient-to-r from-green-600 to-green-500 px-6 py-6 text-white">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-hand-holding-heart text-2xl"></i>
+            <div>
+                <h1 class="text-xl font-semibold">Report a Found Item</h1>
+                <p class="text-green-100 text-sm">Fill out the form below to report a found item.</p>
             </div>
         </div>
     </div>
+    <div class="p-6">
+        <form method="POST" enctype="multipart/form-data" action="{{ url_for('report_found_item') }}" class="space-y-6">
+            {{ form.csrf_token }}
+            <div class="grid sm:grid-cols-2 gap-6">
+                <div>
+                    {{ form.item_name.label(class="block text-sm font-medium text-gray-700 mb-1") }}
+                    {{ form.item_name(class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-sm", placeholder="e.g., iPhone 13, Blue Backpack") }}
+                    {% for error in form.item_name.errors %}<p class="mt-1 text-xs text-red-600">{{ error }}</p>{% endfor %}
+                </div>
+                <div>
+                    {{ form.category.label(class="block text-sm font-medium text-gray-700 mb-1") }}
+                    {{ form.category(class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-sm") }}
+                    {% for error in form.category.errors %}<p class="mt-1 text-xs text-red-600">{{ error }}</p>{% endfor %}
+                </div>
+            </div>
+            <div>
+                {{ form.description.label(class="block text-sm font-medium text-gray-700 mb-1") }}
+                {{ form.description(class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-sm", rows="4", placeholder="Provide a detailed description...") }}
+                {% for error in form.description.errors %}<p class="mt-1 text-xs text-red-600">{{ error }}</p>{% endfor %}
+            </div>
+            <div class="grid sm:grid-cols-2 gap-6">
+                <div>
+                    {{ form.location.label(class="block text-sm font-medium text-gray-700 mb-1") }}
+                    {{ form.location(class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-sm") }}
+                    {% for error in form.location.errors %}<p class="mt-1 text-xs text-red-600">{{ error }}</p>{% endfor %}
+                </div>
+                <div>
+                    {{ form.current_location.label(class="block text-sm font-medium text-gray-700 mb-1") }}
+                    {{ form.current_location(class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-sm") }}
+                    {% for error in form.current_location.errors %}<p class="mt-1 text-xs text-red-600">{{ error }}</p>{% endfor %}
+                </div>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-6">
+                <div>
+                    {{ form.full_names.label(class="block text-sm font-medium text-gray-700 mb-1") }}
+                    {{ form.full_names(class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-sm", placeholder="Your full name") }}
+                    {% for error in form.full_names.errors %}<p class="mt-1 text-xs text-red-600">{{ error }}</p>{% endfor %}
+                </div>
+                <div>
+                    {{ form.student_number.label(class="block text-sm font-medium text-gray-700 mb-1") }}
+                    {{ form.student_number(class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-sm", placeholder="Your student number") }}
+                    {% for error in form.student_number.errors %}<p class="mt-1 text-xs text-red-600">{{ error }}</p>{% endfor %}
+                </div>
+            </div>
+            <div>
+                {{ form.student_email.label(class="block text-sm font-medium text-gray-700 mb-1") }}
+                {{ form.student_email(class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-sm", placeholder="your.email@university.edu") }}
+                {% for error in form.student_email.errors %}<p class="mt-1 text-xs text-red-600">{{ error }}</p>{% endfor %}
+            </div>
+            <div>
+                {{ form.photo.label(class="block text-sm font-medium text-gray-700 mb-1") }}
+                {{ form.photo(class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-sm") }}
+                {% for error in form.photo.errors %}<p class="mt-1 text-xs text-red-600">{{ error }}</p>{% endfor %}
+                <p class="mt-1 text-xs text-gray-500">Supported formats: JPG, PNG, GIF (Max 5MB)</p>
+            </div>
+            <div class="flex items-center justify-end gap-3 pt-2">
+                <a href="{{ url_for('index') }}" class="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-5 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">Cancel</a>
+                {{ form.submit(class="inline-flex items-center gap-2 rounded-md bg-green-600 px-6 py-2 text-sm font-medium text-white shadow hover:bg-green-700") }}
+            </div>
+        </form>
+    </div>
+  </div>
 </div>
 {% endblock %}
 

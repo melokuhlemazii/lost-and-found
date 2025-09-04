@@ -1,106 +1,82 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="hero-section">
-    <div class="container">
-        <div class="hero-content">
-            <h1 class="hero-title">Lost & Found Portal</h1>
-            <p class="hero-subtitle">Reuniting students with their belongings across campus</p>
-            
-            {% if current_user.is_authenticated %}
-                <div class="d-flex justify-content-center gap-3 flex-wrap">
-                    <a href="{{ url_for('report_lost_item') }}" class="btn btn-light btn-lg">
-                        <i class="fas fa-plus me-2"></i>Report Lost Item
-                    </a>
-                    <a href="{{ url_for('report_found_item') }}" class="btn btn-primary btn-lg">
-                        <i class="fas fa-search me-2"></i>Report Found Item
-                    </a>
-                </div>
-            {% else %}
-                <div class="d-flex justify-content-center gap-3 flex-wrap">
-                    <a href="{{ url_for('login') }}" class="btn btn-light btn-lg">
-                        <i class="fas fa-sign-in-alt me-2"></i>Login
-                    </a>
-                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
-                        <i class="fas fa-user-plus me-2"></i>Register
-                    </a>
-                </div>
-            {% endif %}
-        </div>
+<section class="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary-600 via-primary-500 to-primary-700 px-6 py-20 shadow-lg text-center text-white">
+  <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_30%_30%,white,transparent_60%)]"></div>
+  <div class="relative max-w-3xl mx-auto">
+    <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">Lost &amp; Found Portal</h1>
+    <p class="text-primary-100 text-lg mb-8">Reuniting students with their belongings across campus</p>
+    <div class="flex flex-wrap justify-center gap-4">
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('report_lost_item') }}" class="inline-flex items-center gap-2 rounded-md bg-white/10 backdrop-blur px-6 py-3 text-sm font-semibold shadow hover:bg-white/20 transition">
+                <i class="fas fa-plus"></i><span>Report Lost Item</span>
+            </a>
+            <a href="{{ url_for('report_found_item') }}" class="inline-flex items-center gap-2 rounded-md bg-black/20 px-6 py-3 text-sm font-semibold shadow hover:bg-black/30 transition">
+                <i class="fas fa-search"></i><span>Report Found Item</span>
+            </a>
+        {% else %}
+            <a href="{{ url_for('login') }}" class="inline-flex items-center gap-2 rounded-md bg-white/10 backdrop-blur px-6 py-3 text-sm font-semibold shadow hover:bg-white/20 transition">
+                <i class="fas fa-sign-in-alt"></i><span>Login</span>
+            </a>
+            <a href="{{ url_for('register') }}" class="inline-flex items-center gap-2 rounded-md bg-black/20 px-6 py-3 text-sm font-semibold shadow hover:bg-black/30 transition">
+                <i class="fas fa-user-plus"></i><span>Register</span>
+            </a>
+        {% endif %}
     </div>
+  </div>
 </section>
 
-<!-- Statistics Section -->
-<section class="py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3 col-sm-6 mb-4">
-                <div class="stats-card">
-                    <div class="stats-number text-primary">{{ (recent_lost|length) + (recent_found|length) }}</div>
-                    <div class="stats-label">Total Items</div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 mb-4">
-                <div class="stats-card">
-                    <div class="stats-number text-danger">{{ recent_lost|length }}</div>
-                    <div class="stats-label">Lost Items</div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 mb-4">
-                <div class="stats-card">
-                    <div class="stats-number text-primary">{{ recent_found|length }}</div>
-                    <div class="stats-label">Found Items</div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 mb-4">
-                <div class="stats-card">
-                    <div class="stats-number text-success">0</div>
-                    <div class="stats-label">Reunited</div>
-                </div>
-            </div>
-        </div>
+<section class="py-12">
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <div class="rounded-xl bg-white p-5 shadow-sm border border-gray-100 text-center">
+        <div class="text-2xl font-bold text-primary-600">{{ (recent_lost|length) + (recent_found|length) }}</div>
+        <div class="mt-1 text-xs font-medium uppercase tracking-wide text-gray-500">Total Items</div>
     </div>
+    <div class="rounded-xl bg-white p-5 shadow-sm border border-gray-100 text-center">
+        <div class="text-2xl font-bold text-red-600">{{ recent_lost|length }}</div>
+        <div class="mt-1 text-xs font-medium uppercase tracking-wide text-gray-500">Lost Items</div>
+    </div>
+    <div class="rounded-xl bg-white p-5 shadow-sm border border-gray-100 text-center">
+        <div class="text-2xl font-bold text-primary-600">{{ recent_found|length }}</div>
+        <div class="mt-1 text-xs font-medium uppercase tracking-wide text-gray-500">Found Items</div>
+    </div>
+    <div class="rounded-xl bg-white p-5 shadow-sm border border-gray-100 text-center">
+        <div class="text-2xl font-bold text-green-600">0</div>
+        <div class="mt-1 text-xs font-medium uppercase tracking-wide text-gray-500">Reunited</div>
+    </div>
+  </div>
 </section>
 
-<!-- Recent Items Section -->
 {% if recent_lost or recent_found %}
-<section class="py-5 bg-light">
-    <div class="container">
+<section class="py-10">
+    <div class="space-y-16">
         {% if recent_lost %}
-        <div class="mb-5">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="mb-0">
-                    <i class="fas fa-exclamation-triangle text-danger me-2"></i>
-                    Recent Lost Items
-                </h2>
-                <a href="{{ url_for('browse_lost_items') }}" class="btn btn-outline-primary">
+        <div class="space-y-6">
+            <div class="flex items-center justify-between flex-wrap gap-4">
+                <h2 class="text-xl font-semibold flex items-center gap-2"><i class="fas fa-exclamation-triangle text-red-500"></i> Recent Lost Items</h2>
+                <a href="{{ url_for('browse_lost_items') }}" class="inline-flex items-center gap-2 rounded-md border border-primary-200 bg-white px-4 py-2 text-sm font-medium text-primary-700 shadow-sm hover:bg-primary-50">
                     View All Lost Items
                 </a>
             </div>
-            <div class="item-grid">
+            <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {% for item in recent_lost %}
-                <div class="item-card">
-                    {% if item.photo_filename %}
-                        <img src="{{ url_for('uploaded_file', filename=item.photo_filename) }}" alt="{{ item.item_name }}" class="item-photo">
-                    {% else %}
-                        <div class="item-photo bg-light d-flex align-items-center justify-content-center">
-                            <i class="fas fa-image text-muted" style="font-size: 3rem;"></i>
-                        </div>
-                    {% endif %}
-                    <h5 class="mb-2">{{ item.item_name }}</h5>
-                    <p class="text-muted mb-2">
-                        <i class="fas fa-tag me-1"></i>{{ item.category }}
-                    </p>
-                    <p class="text-muted mb-2">
-                        <i class="fas fa-map-marker-alt me-1"></i>{{ item.location }}
-                    </p>
-                    <p class="text-muted mb-3">
-                        <i class="fas fa-calendar me-1"></i>{{ item.created_at.strftime('%Y-%m-%d') }}
-                    </p>
-                    <p class="mb-3">{{ item.description[:100] }}{% if item.description|length > 100 %}...{% endif %}</p>
-                    <a href="{{ url_for('lost_item_detail', item_id=item.id) }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-eye me-1"></i>View Details
+                <div class="group relative rounded-xl border border-gray-200 bg-white p-4 shadow-sm hover:shadow-md transition">
+                    <div class="aspect-square w-full overflow-hidden rounded-md bg-gray-100 mb-3 flex items-center justify-center">
+                        {% if item.photo_filename %}
+                            <img src="{{ url_for('uploaded_file', filename=item.photo_filename) }}" alt="{{ item.item_name }}" class="h-full w-full object-cover group-hover:scale-105 transition" />
+                        {% else %}
+                            <i class="fas fa-image text-gray-400 text-4xl"></i>
+                        {% endif %}
+                    </div>
+                    <h3 class="font-semibold text-gray-900 leading-tight mb-1 truncate">{{ item.item_name }}</h3>
+                    <div class="flex flex-wrap gap-2 text-xs text-gray-500 mb-3">
+                        <span class="inline-flex items-center gap-1"><i class="fas fa-tag"></i>{{ item.category }}</span>
+                        <span class="inline-flex items-center gap-1"><i class="fas fa-map-marker-alt"></i>{{ item.location }}</span>
+                        <span class="inline-flex items-center gap-1"><i class="fas fa-calendar"></i>{{ item.created_at.strftime('%Y-%m-%d') }}</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4 line-clamp-3">{{ item.description[:100] }}{% if item.description|length > 100 %}...{% endif %}</p>
+                    <a href="{{ url_for('lost_item_detail', item_id=item.id) }}" class="inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:text-primary-800">
+                        <i class="fas fa-eye"></i><span>View Details</span>
                     </a>
                 </div>
                 {% endfor %}
@@ -109,42 +85,33 @@
         {% endif %}
 
         {% if recent_found %}
-        <div class="mb-5">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="mb-0">
-                    <i class="fas fa-hand-holding-heart text-success me-2"></i>
-                    Recent Found Items
-                </h2>
-                <a href="{{ url_for('browse_found_items') }}" class="btn btn-outline-primary">
+        <div class="space-y-6">
+            <div class="flex items-center justify-between flex-wrap gap-4">
+                <h2 class="text-xl font-semibold flex items-center gap-2"><i class="fas fa-hand-holding-heart text-green-600"></i> Recent Found Items</h2>
+                <a href="{{ url_for('browse_found_items') }}" class="inline-flex items-center gap-2 rounded-md border border-primary-200 bg-white px-4 py-2 text-sm font-medium text-primary-700 shadow-sm hover:bg-primary-50">
                     View All Found Items
                 </a>
             </div>
-            <div class="item-grid">
+            <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {% for item in recent_found %}
-                <div class="item-card">
-                    {% if item.photo_filename %}
-                        <img src="{{ url_for('uploaded_file', filename=item.photo_filename) }}" alt="{{ item.item_name }}" class="item-photo">
-                    {% else %}
-                        <div class="item-photo bg-light d-flex align-items-center justify-content-center">
-                            <i class="fas fa-image text-muted" style="font-size: 3rem;"></i>
-                        </div>
-                    {% endif %}
-                    <h5 class="mb-2">{{ item.item_name }}</h5>
-                    <p class="text-muted mb-2">
-                        <i class="fas fa-tag me-1"></i>{{ item.category }}
-                    </p>
-                    <p class="text-muted mb-2">
-                        <i class="fas fa-map-marker-alt me-1"></i>{{ item.location }}
-                    </p>
-                    <p class="text-muted mb-2">
-                        <i class="fas fa-home me-1"></i>{{ item.current_location }}
-                    </p>
-                    <p class="text-muted mb-3">
-                        <i class="fas fa-calendar me-1"></i>{{ item.created_at.strftime('%Y-%m-%d') }}
-                    </p>
-                    <p class="mb-3">{{ item.description[:100] }}{% if item.description|length > 100 %}...{% endif %}</p>
-                    <a href="{{ url_for('found_item_detail', item_id=item.id) }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-eye me-1"></i>View Details
+                <div class="group relative rounded-xl border border-gray-200 bg-white p-4 shadow-sm hover:shadow-md transition">
+                    <div class="aspect-square w-full overflow-hidden rounded-md bg-gray-100 mb-3 flex items-center justify-center">
+                        {% if item.photo_filename %}
+                            <img src="{{ url_for('uploaded_file', filename=item.photo_filename) }}" alt="{{ item.item_name }}" class="h-full w-full object-cover group-hover:scale-105 transition" />
+                        {% else %}
+                            <i class="fas fa-image text-gray-400 text-4xl"></i>
+                        {% endif %}
+                    </div>
+                    <h3 class="font-semibold text-gray-900 leading-tight mb-1 truncate">{{ item.item_name }}</h3>
+                    <div class="flex flex-wrap gap-2 text-xs text-gray-500 mb-3">
+                        <span class="inline-flex items-center gap-1"><i class="fas fa-tag"></i>{{ item.category }}</span>
+                        <span class="inline-flex items-center gap-1"><i class="fas fa-map-marker-alt"></i>{{ item.location }}</span>
+                        <span class="inline-flex items-center gap-1"><i class="fas fa-home"></i>{{ item.current_location }}</span>
+                        <span class="inline-flex items-center gap-1"><i class="fas fa-calendar"></i>{{ item.created_at.strftime('%Y-%m-%d') }}</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4 line-clamp-3">{{ item.description[:100] }}{% if item.description|length > 100 %}...{% endif %}</p>
+                    <a href="{{ url_for('found_item_detail', item_id=item.id) }}" class="inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:text-primary-800">
+                        <i class="fas fa-eye"></i><span>View Details</span>
                     </a>
                 </div>
                 {% endfor %}
@@ -155,52 +122,41 @@
 </section>
 {% endif %}
 
-<!-- Quick Actions Section -->
-<section class="py-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 text-center">
-                <h2 class="mb-4">What would you like to do?</h2>
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <div class="card h-100">
-                            <div class="card-body text-center">
-                                <i class="fas fa-search fa-3x text-primary mb-3"></i>
-                                <h5 class="card-title">Search Items</h5>
-                                <p class="card-text">Browse through lost and found items to find what you're looking for.</p>
-                                <a href="{{ url_for('search_items') }}" class="btn btn-primary">
-                                    <i class="fas fa-search me-1"></i>Search Now
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card h-100">
-                            <div class="card-body text-center">
-                                <i class="fas fa-plus fa-3x text-success mb-3"></i>
-                                <h5 class="card-title">Report Item</h5>
-                                <p class="card-text">Report a lost item or submit a found item to help others.</p>
-                                {% if current_user.is_authenticated %}
-                                    <div class="d-grid gap-2">
-                                        <a href="{{ url_for('report_lost_item') }}" class="btn btn-outline-danger">
-                                            <i class="fas fa-exclamation-triangle me-1"></i>Report Lost
-                                        </a>
-                                        <a href="{{ url_for('report_found_item') }}" class="btn btn-outline-success">
-                                            <i class="fas fa-hand-holding-heart me-1"></i>Report Found
-                                        </a>
-                                    </div>
-                                {% else %}
-                                    <a href="{{ url_for('login') }}" class="btn btn-primary">
-                                        <i class="fas fa-sign-in-alt me-1"></i>Login to Report
-                                    </a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
+<section class="py-12">
+  <div class="max-w-4xl mx-auto text-center">
+    <h2 class="text-2xl font-semibold mb-8">What would you like to do?</h2>
+    <div class="grid sm:grid-cols-2 gap-6">
+        <div class="relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 shadow-sm flex flex-col items-center text-center">
+            <div class="absolute inset-0 bg-gradient-to-br from-primary-50/40 to-transparent"></div>
+            <i class="fas fa-search text-primary-600 text-4xl mb-4 relative"></i>
+            <h3 class="font-semibold text-gray-900 mb-2 relative">Search Items</h3>
+            <p class="text-sm text-gray-600 mb-5 relative">Browse through lost and found items to find what you're looking for.</p>
+            <a href="{{ url_for('search_items') }}" class="relative inline-flex items-center gap-2 rounded-md bg-primary-600 px-5 py-2.5 text-sm font-medium text-white shadow hover:bg-primary-700">
+                <i class="fas fa-search"></i><span>Search Now</span>
+            </a>
+        </div>
+        <div class="relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 shadow-sm flex flex-col items-center text-center">
+            <div class="absolute inset-0 bg-gradient-to-br from-green-50/50 to-transparent"></div>
+            <i class="fas fa-plus text-green-600 text-4xl mb-4 relative"></i>
+            <h3 class="font-semibold text-gray-900 mb-2 relative">Report Item</h3>
+            <p class="text-sm text-gray-600 mb-5 relative">Report a lost item or submit a found item to help others.</p>
+            {% if current_user.is_authenticated %}
+                <div class="flex flex-col gap-3 w-full relative">
+                    <a href="{{ url_for('report_lost_item') }}" class="inline-flex items-center justify-center gap-2 rounded-md border border-red-200 bg-red-50 px-5 py-2.5 text-sm font-medium text-red-700 hover:bg-red-100">
+                        <i class="fas fa-exclamation-triangle"></i><span>Report Lost</span>
+                    </a>
+                    <a href="{{ url_for('report_found_item') }}" class="inline-flex items-center justify-center gap-2 rounded-md border border-green-200 bg-green-50 px-5 py-2.5 text-sm font-medium text-green-700 hover:bg-green-100">
+                        <i class="fas fa-hand-holding-heart"></i><span>Report Found</span>
+                    </a>
                 </div>
-            </div>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="relative inline-flex items-center gap-2 rounded-md bg-primary-600 px-5 py-2.5 text-sm font-medium text-white shadow hover:bg-primary-700">
+                    <i class="fas fa-sign-in-alt"></i><span>Login to Report</span>
+                </a>
+            {% endif %}
         </div>
     </div>
+  </div>
 </section>
 {% endblock %}
 

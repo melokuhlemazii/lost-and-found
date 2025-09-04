@@ -1,78 +1,65 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div class="container py-4">
-    <h1 class="mb-4">My Profile</h1>
-
-    <div class="card mb-4">
-        <div class="card-header">
-            <h2 class="h4 mb-0">Edit Profile Information</h2>
+<div class="max-w-5xl mx-auto space-y-10 px-4 py-10">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <h1 class="text-2xl font-semibold tracking-tight flex items-center gap-2"><i class="fas fa-id-badge text-primary-600"></i><span>My Profile</span></h1>
+            <p class="text-sm text-gray-600">Update your account details.</p>
         </div>
-        <div class="card-body">
-            <form method="POST">
-                {{ form.hidden_tag() }}
-                
-                <div class="mb-3">
-                    {{ form.username.label(class="form-label") }}
-                    {{ form.username(class="form-control") }}
-                    {% if form.username.errors %}
-                        {% for error in form.username.errors %}
-                            <div class="text-danger small mt-1">{{ error }}</div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-                
-                <div class="mb-3">
-                    {{ form.email.label(class="form-label") }}
-                    {{ form.email(class="form-control") }}
-                    {% if form.email.errors %}
-                        {% for error in form.email.errors %}
-                            <div class="text-danger small mt-1">{{ error }}</div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-                
-                <div class="mb-3">
-                    {{ form.submit(class="btn btn-primary") }}
-                </div>
-            </form>
+        <div class="flex gap-2">
+            <a href="{{ url_for('user_dashboard') }}" class="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium shadow-sm hover:bg-gray-50"><i class="fas fa-gauge"></i><span>Dashboard</span></a>
+            <a href="{{ url_for('change_password') }}" class="inline-flex items-center gap-2 rounded-md bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-primary-700"><i class="fas fa-key"></i><span>Change Password</span></a>
         </div>
     </div>
-
-    <div class="card mb-4">
-        <div class="card-header">
-            <h2 class="h4 mb-0">Account Information</h2>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <p><strong>Username:</strong> {{ current_user.username }}</p>
-                    <p><strong>Email:</strong> {{ current_user.email }}</p>
-                    <p><strong>Role:</strong> {{ current_user.role }}</p>
+    <div class="grid gap-8 md:grid-cols-3">
+        <!-- Profile Form -->
+        <div class="md:col-span-2">
+            <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
+                <div class="border-b px-6 py-4 flex items-center justify-between">
+                    <h2 class="text-lg font-medium flex items-center gap-2"><i class="fas fa-user-circle text-primary-500"></i><span>Edit Profile Information</span></h2>
                 </div>
-                <div class="col-md-6">
-                    <p><strong>Verified:</strong> {{ 'Yes' if current_user.is_verified else 'No' }}</p>
-                    <p><strong>Member since:</strong> {{ current_user.created_at.strftime('%Y-%m-%d') }}</p>
-                    {% if current_user.last_login %}
-                        <p><strong>Last login:</strong> {{ current_user.last_login.strftime('%Y-%m-%d %H:%M') }}</p>
-                    {% endif %}
+                <div class="p-6">
+                    <form method="POST" novalidate class="space-y-6">
+                        {{ form.hidden_tag() }}
+                        <div class="grid gap-6 sm:grid-cols-2">
+                            <div class="space-y-1.5">
+                                <label for="username" class="text-sm font-medium text-gray-700">{{ form.username.label }}</label>
+                                {{ form.username(class_='w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500', placeholder='Your username') }}
+                                {% if form.username.errors %}<p class="text-xs text-red-600">{{ form.username.errors[0] }}</p>{% endif %}
+                            </div>
+                            <div class="space-y-1.5">
+                                <label for="email" class="text-sm font-medium text-gray-700">{{ form.email.label }}</label>
+                                {{ form.email(class_='w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500', placeholder='you@example.com') }}
+                                {% if form.email.errors %}<p class="text-xs text-red-600">{{ form.email.errors[0] }}</p>{% endif %}
+                            </div>
+                        </div>
+                        <div class="pt-2 flex items-center gap-3">
+                            {{ form.submit(class_='inline-flex items-center gap-2 rounded-md bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white shadow hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500') }}
+                            <a href="{{ url_for('change_password') }}" class="text-sm font-medium text-primary-600 hover:text-primary-700">Need to change password?</a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header">
-            <h2 class="h4 mb-0">Quick Actions</h2>
-        </div>
-        <div class="card-body">
-            <div class="d-flex gap-2 flex-wrap">
-                <a href="{{ url_for('change_password') }}" class="btn btn-outline-primary">
-                    <i class="fas fa-key me-1"></i>Change Password
-                </a>
-                <a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
-                </a>
+        <!-- Info Panel -->
+        <div class="space-y-6">
+            <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+                <div class="px-5 py-4 border-b flex items-center gap-2"><i class="fas fa-circle-info text-primary-500"></i><h3 class="text-sm font-semibold tracking-wide">Account Information</h3></div>
+                <div class="px-5 py-4 text-sm leading-relaxed space-y-3">
+                    <p><span class="font-medium text-gray-700">Username:</span> {{ current_user.username }}</p>
+                    <p><span class="font-medium text-gray-700">Email:</span> {{ current_user.email }}</p>
+                    <p><span class="font-medium text-gray-700">Role:</span> {{ current_user.role|title }}</p>
+                    <p><span class="font-medium text-gray-700">Verified:</span> <span class="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold {{ 'bg-emerald-100 text-emerald-700' if current_user.is_verified else 'bg-gray-100 text-gray-600' }}">{{ 'Yes' if current_user.is_verified else 'No' }}</span></p>
+                    <p><span class="font-medium text-gray-700">Member since:</span> {{ current_user.created_at.strftime('%Y-%m-%d') }}</p>
+                    {% if current_user.last_login %}<p><span class="font-medium text-gray-700">Last login:</span> {{ current_user.last_login.strftime('%Y-%m-%d %H:%M') }}</p>{% endif %}
+                </div>
+            </div>
+            <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+                <div class="px-5 py-3 border-b flex items-center gap-2"><i class="fas fa-lightbulb text-amber-500"></i><h3 class="text-sm font-semibold tracking-wide">Quick Actions</h3></div>
+                <div class="px-5 py-4 flex gap-3 flex-wrap">
+                    <a href="{{ url_for('change_password') }}" class="inline-flex items-center gap-2 rounded-md bg-primary-50 px-4 py-2 text-sm font-medium text-primary-700 hover:bg-primary-100"><i class="fas fa-key"></i>Change Password</a>
+                    <a href="{{ url_for('user_dashboard') }}" class="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"><i class="fas fa-arrow-left"></i>Back to Dashboard</a>
+                </div>
             </div>
         </div>
     </div>

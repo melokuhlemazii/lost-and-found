@@ -1,111 +1,173 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ title if title else "Lost and Found Portal" }}</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="description" content="Campus lost and found portal" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'ui-sans-serif','system-ui'] },
+                    colors: {
+                        primary: {
+                            50:'#eef2ff',100:'#e0e7ff',200:'#c7d2fe',300:'#a5b4fc',400:'#818cf8',500:'#6366f1',600:'#4f46e5',700:'#4338ca',800:'#3730a3',900:'#312e81'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Modern Custom Styles -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body { font-family: 'Inter', ui-sans-serif, system-ui; }
+        .fade-in { animation: fade-in .4s ease var(--delay,0s) both; }
+        @keyframes fade-in { from { opacity:0; transform:translateY(4px);} to { opacity:1; transform:none;} }
+    </style>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{{ url_for('index') }}">
-                <i class="fas fa-search-location"></i> Lost & Found
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'browse_lost_items' %}active{% endif %}" href="{{ url_for('browse_lost_items') }}">Lost Items</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'browse_found_items' %}active{% endif %}" href="{{ url_for('browse_found_items') }}">Found Items</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'search_items' %}active{% endif %}" href="{{ url_for('search_items') }}">Search</a>
-                    </li>
-                </ul>
-                <form class="d-flex search-container" action="{{ url_for('search_items') }}" method="get">
-                    <input class="form-control search-input" type="search" name="query" placeholder="Search for items..." aria-label="Search">
-                    <button class="btn search-btn" type="submit"><i class="fas fa-search"></i></button>
-                </form>
-                <ul class="navbar-nav ms-auto">
+<body class="min-h-full bg-gray-50 text-gray-800 flex flex-col">
+    <header class="sticky top-0 z-40 border-b bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex h-16 items-center justify-between gap-4">
+                <div class="flex items-center gap-6">
+                    <a href="{{ url_for('index') }}" class="flex items-center gap-2 font-semibold text-primary-600 hover:text-primary-700">
+                        <i class="fas fa-search-location"></i>
+                        <span class="text-lg">Lost &amp; Found</span>
+                    </a>
+                    <nav class="hidden md:flex gap-1">
+                        <a href="{{ url_for('index') }}" class="px-3 py-2 text-sm font-medium rounded-md {{ 'bg-primary-50 text-primary-700' if request.endpoint=='index' else 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' }}">Home</a>
+                        <a href="{{ url_for('browse_lost_items') }}" class="px-3 py-2 text-sm font-medium rounded-md {{ 'bg-primary-50 text-primary-700' if request.endpoint=='browse_lost_items' else 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' }}">Lost Items</a>
+                        <a href="{{ url_for('browse_found_items') }}" class="px-3 py-2 text-sm font-medium rounded-md {{ 'bg-primary-50 text-primary-700' if request.endpoint=='browse_found_items' else 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' }}">Found Items</a>
+                        <a href="{{ url_for('search_items') }}" class="px-3 py-2 text-sm font-medium rounded-md {{ 'bg-primary-50 text-primary-700' if request.endpoint=='search_items' else 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' }}">Search</a>
+                    </nav>
+                </div>
+                <div class="flex items-center gap-4">
+                    <form action="{{ url_for('search_items') }}" method="get" class="hidden lg:block">
+                        <label class="relative block">
+                            <span class="sr-only">Search</span>
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-2 text-gray-400"><i class="fas fa-search"></i></span>
+                            <input name="query" placeholder="Search..." class="w-64 rounded-md border border-gray-300 bg-white py-2 pl-8 pr-3 text-sm placeholder-gray-400 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/50" />
+                        </label>
+                    </form>
                     {% if current_user.is_authenticated %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-user-circle"></i> {{ current_user.username }}
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="{{ url_for('user_dashboard') }}">My Dashboard</a></li>
-                                <li><a class="dropdown-item" href="{{ url_for('user_profile') }}">Profile</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ url_for('report_lost_item') }}">Report Lost</a></li>
-                                <li><a class="dropdown-item" href="{{ url_for('report_found_item') }}">Report Found</a></li>
-                                <li><a class="dropdown-item" href="{{ url_for('claim') }}">Claim Item</a></li>
-                                {% if current_user.role == 'admin' %}
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a></li>
-                                {% endif %}
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
-                            </ul>
-                        </li>
+                        <div class="relative" id="user-menu-wrapper">
+                            <button id="user-menu-button" type="button" class="flex items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-medium shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                                <i class="fas fa-user-circle text-primary-500"></i>
+                                <span class="hidden sm:inline">{{ current_user.username }}</span>
+                                <i class="fas fa-chevron-down text-xs opacity-70"></i>
+                            </button>
+                            <div id="user-menu" class="absolute right-0 mt-2 w-56 origin-top-right rounded-lg border border-gray-200 bg-white shadow-lg ring-1 ring-black/5 hidden">
+                                <div class="py-1 text-sm">
+                                    <a href="{{ url_for('user_dashboard') }}" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-50"><i class="fas fa-gauge"></i><span>My Dashboard</span></a>
+                                    <a href="{{ url_for('user_profile') }}" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-50"><i class="fas fa-id-badge"></i><span>Profile</span></a>
+                                    <div class="my-1 border-t"></div>
+                                    <a href="{{ url_for('report_lost_item') }}" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-50"><i class="fas fa-exclamation-triangle text-amber-500"></i><span>Report Lost</span></a>
+                                    <a href="{{ url_for('report_found_item') }}" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-50"><i class="fas fa-hand-holding-heart text-green-600"></i><span>Report Found</span></a>
+                                    <a href="{{ url_for('claim') }}" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-50"><i class="fas fa-hand-paper text-primary-600"></i><span>Claim Item</span></a>
+                                    {% if current_user.role == 'admin' %}
+                                    <div class="my-1 border-t"></div>
+                                    <a href="{{ url_for('admin_dashboard') }}" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-50"><i class="fas fa-shield-halved text-red-600"></i><span>Admin Dashboard</span></a>
+                                    {% endif %}
+                                    <div class="my-1 border-t"></div>
+                                    <a href="{{ url_for('logout') }}" class="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50"><i class="fas fa-right-from-bracket"></i><span>Logout</span></a>
+                                </div>
+                            </div>
+                        </div>
                     {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-                        </li>
+                        <a href="{{ url_for('login') }}" class="rounded-md bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500">Login</a>
                     {% endif %}
-                </ul>
+                    <button id="mobile-nav-toggle" class="md:hidden inline-flex items-center justify-center rounded-md border border-gray-200 bg-white p-2 text-gray-600 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                        <span class="sr-only">Open menu</span>
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div id="mobile-nav" class="md:hidden hidden pb-4 space-y-2">
+                <form action="{{ url_for('search_items') }}" method="get" class="px-1">
+                    <input name="query" placeholder="Search..." class="w-full rounded-md border border-gray-300 bg-white py-2 px-3 text-sm shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/50" />
+                </form>
+                <nav class="flex flex-col gap-1 px-1">
+                    <a href="{{ url_for('index') }}" class="px-3 py-2 rounded-md text-sm font-medium {{ 'bg-primary-50 text-primary-700' if request.endpoint=='index' else 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' }}">Home</a>
+                    <a href="{{ url_for('browse_lost_items') }}" class="px-3 py-2 rounded-md text-sm font-medium {{ 'bg-primary-50 text-primary-700' if request.endpoint=='browse_lost_items' else 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' }}">Lost Items</a>
+                    <a href="{{ url_for('browse_found_items') }}" class="px-3 py-2 rounded-md text-sm font-medium {{ 'bg-primary-50 text-primary-700' if request.endpoint=='browse_found_items' else 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' }}">Found Items</a>
+                    <a href="{{ url_for('search_items') }}" class="px-3 py-2 rounded-md text-sm font-medium {{ 'bg-primary-50 text-primary-700' if request.endpoint=='search_items' else 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' }}">Search</a>
+                    {% if current_user.is_authenticated %}
+                        <div class="pt-2 border-t"></div>
+                        <a href="{{ url_for('user_dashboard') }}" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100">My Dashboard</a>
+                        <a href="{{ url_for('user_profile') }}" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100">Profile</a>
+                        <a href="{{ url_for('report_lost_item') }}" class="px-3 py-2 rounded-md text-sm font-medium text-amber-700 hover:bg-amber-50">Report Lost</a>
+                        <a href="{{ url_for('report_found_item') }}" class="px-3 py-2 rounded-md text-sm font-medium text-green-700 hover:bg-green-50">Report Found</a>
+                        <a href="{{ url_for('claim') }}" class="px-3 py-2 rounded-md text-sm font-medium text-primary-700 hover:bg-primary-50">Claim Item</a>
+                        {% if current_user.role == 'admin' %}
+                        <a href="{{ url_for('admin_dashboard') }}" class="px-3 py-2 rounded-md text-sm font-medium text-red-700 hover:bg-red-50">Admin Dashboard</a>
+                        {% endif %}
+                        <a href="{{ url_for('logout') }}" class="px-3 py-2 rounded-md text-sm font-medium text-red-600 hover:bg-red-50">Logout</a>
+                    {% endif %}
+                </nav>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <main class="container my-4">
+    <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-                <div class="container mt-3">
+                <div class="mb-6 space-y-2">
                     {% for category, message in messages %}
-                        <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show" role="alert">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        {% set color = 'blue' %}
+                        {% if category in ['success'] %}{% set color='green' %}{% elif category in ['error','danger'] %}{% set color='red' %}{% elif category=='warning' %}{% set color='amber' %}{% elif category=='info' %}{% set color='blue' %}{% endif %}
+                        <div class="relative flex items-start gap-3 rounded-md border border-{{ color }}-200 bg-{{ color }}-50 px-4 py-3 text-sm text-{{ color }}-800 shadow-sm">
+                            <span class="mt-0.5"><i class="fas fa-circle-info"></i></span>
+                            <div class="flex-1">{{ message }}</div>
+                            <button type="button" class="dismiss-alert text-{{ color }}-500 hover:text-{{ color }}-700"><i class="fas fa-xmark"></i></button>
                         </div>
                     {% endfor %}
                 </div>
             {% endif %}
         {% endwith %}
-        
         {% block content %}{% endblock %}
     </main>
 
-    <footer>
-        <div class="container">
-            <p>&copy; {{ current_year if current_year else "2025" }} Lost and Found Portal</p>
+    <footer class="mt-16 border-t bg-white/70 backdrop-blur">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+                <p>&copy; {{ current_year if current_year else '2025' }} Lost &amp; Found Portal. All rights reserved.</p>
+                <div class="flex items-center gap-4">
+                    <a href="{{ url_for('browse_lost_items') }}" class="hover:text-gray-800">Lost</a>
+                    <a href="{{ url_for('browse_found_items') }}" class="hover:text-gray-800">Found</a>
+                    <a href="{{ url_for('search_items') }}" class="hover:text-gray-800">Search</a>
+                </div>
+            </div>
         </div>
     </footer>
 
-    <!-- Bootstrap 5 JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Custom JS -->
     <script>
-        // Add fade-in animation to cards
-        document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.card, .item-card, .stats-card');
-            cards.forEach((card, index) => {
-                card.style.animationDelay = `${index * 0.1}s`;
-                card.classList.add('fade-in-up');
+        // Mobile nav toggle
+        const mobileBtn = document.getElementById('mobile-nav-toggle');
+        const mobileNav = document.getElementById('mobile-nav');
+        if(mobileBtn){
+            mobileBtn.addEventListener('click', ()=> mobileNav.classList.toggle('hidden'));
+        }
+        // User dropdown
+        const userBtn = document.getElementById('user-menu-button');
+        const userMenu = document.getElementById('user-menu');
+        if(userBtn){
+            userBtn.addEventListener('click', (e)=>{ e.stopPropagation(); userMenu.classList.toggle('hidden'); });
+            document.addEventListener('click', (e)=>{
+                if(!userMenu.classList.contains('hidden') && !userMenu.contains(e.target) && e.target!==userBtn){
+                    userMenu.classList.add('hidden');
+                }
             });
+        }
+        // Dismiss alerts
+        document.querySelectorAll('.dismiss-alert').forEach(btn=>{
+            btn.addEventListener('click', ()=>{ btn.closest('div').remove(); });
         });
     </script>
 </body>

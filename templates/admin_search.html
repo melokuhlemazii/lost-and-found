@@ -1,213 +1,47 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="mb-0">
-            <i class="fas fa-search me-2"></i>Admin Search
-        </h1>
-        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left me-2"></i>Dashboard
-        </a>
+<div class="space-y-8">
+    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div>
+            <h1 class="text-2xl font-semibold tracking-tight flex items-center gap-2"><i class="fas fa-magnifying-glass text-primary-600"></i><span>Admin Search</span></h1>
+            <p class="text-sm text-gray-600">Search across items, users or claims.</p>
+        </div>
+        <a href="{{ url_for('admin_dashboard') }}" class="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium shadow-sm hover:bg-gray-50"><i class="fas fa-arrow-left"></i>Dashboard</a>
     </div>
 
-    <!-- Search Form -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h2 class="h4 mb-0">
-                <i class="fas fa-filter me-2"></i>Search Filters
-            </h2>
-        </div>
-        <div class="card-body">
-            <form method="POST" action="{{ url_for('admin_search') }}" class="row g-3">
-                {{ form.hidden_tag() }}
-
-                <!-- Query -->
-                <div class="col-md-8">
-                    <label for="{{ form.query.id }}" class="form-label">Query</label>
-                    {{ form.query(class_='form-control', placeholder='Search term...') }}
-                    {% if form.query.errors %}
-                        {% for error in form.query.errors %}
-                            <div class="text-danger small mt-1">{{ error }}</div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-
-                <!-- Type -->
-                <div class="col-md-4">
-                    <label for="{{ form.search_type.id }}" class="form-label">Type</label>
-                    {{ form.search_type(class_='form-select') }}
-                    {% if form.search_type.errors %}
-                        {% for error in form.search_type.errors %}
-                            <div class="text-danger small mt-1">{{ error }}</div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-
-                <!-- Submit -->
-                <div class="col-12">
-                    {{ form.submit(class_='btn btn-primary') }}
-                </div>
-            </form>
-        </div>
+    <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="border-b px-5 py-3"><h2 class="text-sm font-semibold tracking-wide flex items-center gap-2"><i class="fas fa-filter text-primary-500"></i>Search Filters</h2></div>
+        <form method="POST" action="{{ url_for('admin_search') }}" class="p-5 space-y-5">{{ form.hidden_tag() }}
+            <div class="grid gap-5 md:grid-cols-3">
+                <div class="md:col-span-2 space-y-1">{{ form.query.label(class_='text-xs font-medium text-gray-600') }}{{ form.query(class_='w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500', placeholder='Search term...') }}{% if form.query.errors %}<p class="text-xs text-red-600">{{ form.query.errors[0] }}</p>{% endif %}</div>
+                <div class="space-y-1">{{ form.search_type.label(class_='text-xs font-medium text-gray-600') }}{{ form.search_type(class_='w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500') }}{% if form.search_type.errors %}<p class="text-xs text-red-600">{{ form.search_type.errors[0] }}</p>{% endif %}</div>
+            </div>
+            <div class="flex justify-end pt-2">{{ form.submit(class_='inline-flex items-center gap-2 rounded-md bg-primary-600 px-5 py-2 text-sm font-semibold text-white shadow hover:bg-primary-700') }}</div>
+        </form>
     </div>
 
-    <!-- Results -->
     {% if results %}
-    <div class="card">
-        <div class="card-header">
-            <h2 class="h4 mb-0">
-                <i class="fas fa-list me-2"></i>Results
-            </h2>
-        </div>
-        <div class="card-body">
-            {% if form.search_type.data == 'items' %}
-                <!-- Lost Items -->
-                <div class="mb-4">
-                    <h3 class="h5 mb-3 text-danger">
-                        <i class="fas fa-exclamation-triangle me-2"></i>Lost Items
-                    </h3>
-
-                    {% if results.lost %}
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Category</th>
-                                    <th>Status</th>
-                                    <th>Reporter</th>
-                                    <th>Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for item in results.lost %}
-                                <tr>
-                                    <td>{{ item.id }}</td>
-                                    <td>{{ item.item_name }}</td>
-                                    <td>{{ item.category }}</td>
-                                    <td>{{ item.status }}</td>
-                                    <td>{{ item.full_names }}</td>
-                                    <td>{{ item.created_at.strftime('%Y-%m-%d') }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    {% else %}
-                    <p class="text-muted">No lost items found.</p>
-                    {% endif %}
-                </div>
-
-                <!-- Found Items -->
-                <div class="mb-4">
-                    <h3 class="h5 mb-3 text-success">
-                        <i class="fas fa-hand-holding-heart me-2"></i>Found Items
-                    </h3>
-
-                    {% if results.found %}
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Category</th>
-                                    <th>Status</th>
-                                    <th>Finder</th>
-                                    <th>Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for item in results.found %}
-                                <tr>
-                                    <td>{{ item.id }}</td>
-                                    <td>{{ item.item_name }}</td>
-                                    <td>{{ item.category }}</td>
-                                    <td>{{ item.status }}</td>
-                                    <td>{{ item.full_names }}</td>
-                                    <td>{{ item.created_at.strftime('%Y-%m-%d') }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    {% else %}
-                    <p class="text-muted">No found items found.</p>
-                    {% endif %}
-                </div>
-
-            {% elif form.search_type.data == 'users' %}
-                <h3 class="h5 mb-3">
-                    <i class="fas fa-users me-2"></i>Users
-                </h3>
-
-                {% if results %}
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th>ID</th>
-                                <th>Username</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Verified</th>
-                                <th>Banned</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for user in results %}
-                            <tr>
-                                <td>{{ user.id }}</td>
-                                <td>{{ user.username }}</td>
-                                <td>{{ user.email }}</td>
-                                <td>{{ user.role }}</td>
-                                <td>{{ 'Yes' if user.is_verified else 'No' }}</td>
-                                <td>{{ 'Yes' if user.is_banned else 'No' }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% else %}
-                <p class="text-muted">No users found.</p>
-                {% endif %}
-
-            {% elif form.search_type.data == 'claims' %}
-                <h3 class="h5 mb-3">
-                    <i class="fas fa-clipboard-list me-2"></i>Claims
-                </h3>
-
-                {% if results %}
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th>ID</th>
-                                <th>Claimant</th>
-                                <th>Item Type</th>
-                                <th>Status</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for claim in results %}
-                            <tr>
-                                <td>{{ claim.id }}</td>
-                                <td>{{ claim.full_names }}</td>
-                                <td>{{ claim.item_type }}</td>
-                                <td>{{ claim.status }}</td>
-                                <td>{{ claim.created_at.strftime('%Y-%m-%d') }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% else %}
-                <p class="text-muted">No claims found.</p>
-                {% endif %}
-            {% endif %}
-        </div>
+    <div class="space-y-10">
+        {% if form.search_type.data == 'items' %}
+            <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+                <div class="flex items-center gap-2 border-b px-5 py-3"><i class="fas fa-exclamation-triangle text-red-600"></i><h3 class="text-sm font-semibold tracking-wide">Lost Items</h3></div>
+                <div class="overflow-x-auto">{% if results.lost %}<table class="min-w-full text-sm"><thead class="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-600"><tr><th class="px-4 py-2 font-semibold">ID</th><th class="px-4 py-2 font-semibold">Name</th><th class="px-4 py-2 font-semibold">Category</th><th class="px-4 py-2 font-semibold">Status</th><th class="px-4 py-2 font-semibold">Reporter</th><th class="px-4 py-2 font-semibold">Date</th></tr></thead><tbody class="divide-y divide-gray-100">{% for item in results.lost %}<tr class="hover:bg-gray-50/70"><td class="px-4 py-2 text-gray-600">{{ item.id }}</td><td class="px-4 py-2 font-medium text-gray-800">{{ item.item_name }}</td><td class="px-4 py-2 text-gray-600">{{ item.category }}</td><td class="px-4 py-2 text-gray-600">{{ item.status }}</td><td class="px-4 py-2 text-gray-600">{{ item.full_names }}</td><td class="px-4 py-2 text-gray-600">{{ item.created_at.strftime('%Y-%m-%d') }}</td></tr>{% endfor %}</tbody></table>{% else %}<p class="p-6 text-center text-sm text-gray-500">No lost items found.</p>{% endif %}</div>
+            </div>
+            <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+                <div class="flex items-center gap-2 border-b px-5 py-3"><i class="fas fa-hand-holding-heart text-indigo-600"></i><h3 class="text-sm font-semibold tracking-wide">Found Items</h3></div>
+                <div class="overflow-x-auto">{% if results.found %}<table class="min-w-full text-sm"><thead class="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-600"><tr><th class="px-4 py-2 font-semibold">ID</th><th class="px-4 py-2 font-semibold">Name</th><th class="px-4 py-2 font-semibold">Category</th><th class="px-4 py-2 font-semibold">Status</th><th class="px-4 py-2 font-semibold">Finder</th><th class="px-4 py-2 font-semibold">Date</th></tr></thead><tbody class="divide-y divide-gray-100">{% for item in results.found %}<tr class="hover:bg-gray-50/70"><td class="px-4 py-2 text-gray-600">{{ item.id }}</td><td class="px-4 py-2 font-medium text-gray-800">{{ item.item_name }}</td><td class="px-4 py-2 text-gray-600">{{ item.category }}</td><td class="px-4 py-2 text-gray-600">{{ item.status }}</td><td class="px-4 py-2 text-gray-600">{{ item.full_names }}</td><td class="px-4 py-2 text-gray-600">{{ item.created_at.strftime('%Y-%m-%d') }}</td></tr>{% endfor %}</tbody></table>{% else %}<p class="p-6 text-center text-sm text-gray-500">No found items found.</p>{% endif %}</div>
+            </div>
+        {% elif form.search_type.data == 'users' %}
+            <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+                <div class="flex items-center gap-2 border-b px-5 py-3"><i class="fas fa-users text-primary-600"></i><h3 class="text-sm font-semibold tracking-wide">Users</h3></div>
+                <div class="overflow-x-auto">{% if results %}<table class="min-w-full text-sm"><thead class="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-600"><tr><th class="px-4 py-2 font-semibold">ID</th><th class="px-4 py-2 font-semibold">Username</th><th class="px-4 py-2 font-semibold">Email</th><th class="px-4 py-2 font-semibold">Role</th><th class="px-4 py-2 font-semibold">Verified</th><th class="px-4 py-2 font-semibold">Banned</th></tr></thead><tbody class="divide-y divide-gray-100">{% for user in results %}<tr class="hover:bg-gray-50/70"><td class="px-4 py-2 text-gray-600">{{ user.id }}</td><td class="px-4 py-2 font-medium text-gray-800">{{ user.username }}</td><td class="px-4 py-2 text-gray-600">{{ user.email }}</td><td class="px-4 py-2 text-gray-600">{{ user.role }}</td><td class="px-4 py-2">{% if user.is_verified %}<span class="inline-flex rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">Yes</span>{% else %}<span class="inline-flex rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600">No</span>{% endif %}</td><td class="px-4 py-2">{% if user.is_banned %}<span class="inline-flex rounded-full bg-red-100 px-2.5 py-1 text-xs font-semibold text-red-700">Yes</span>{% else %}<span class="inline-flex rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600">No</span>{% endif %}</td></tr>{% endfor %}</tbody></table>{% else %}<p class="p-6 text-center text-sm text-gray-500">No users found.</p>{% endif %}</div>
+            </div>
+        {% elif form.search_type.data == 'claims' %}
+            <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+                <div class="flex items-center gap-2 border-b px-5 py-3"><i class="fas fa-clipboard-list text-primary-600"></i><h3 class="text-sm font-semibold tracking-wide">Claims</h3></div>
+                <div class="overflow-x-auto">{% if results %}<table class="min-w-full text-sm"><thead class="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-600"><tr><th class="px-4 py-2 font-semibold">ID</th><th class="px-4 py-2 font-semibold">Claimant</th><th class="px-4 py-2 font-semibold">Item Type</th><th class="px-4 py-2 font-semibold">Status</th><th class="px-4 py-2 font-semibold">Date</th></tr></thead><tbody class="divide-y divide-gray-100">{% for claim in results %}<tr class="hover:bg-gray-50/70"><td class="px-4 py-2 text-gray-600">{{ claim.id }}</td><td class="px-4 py-2 font-medium text-gray-800">{{ claim.full_names }}</td><td class="px-4 py-2 text-gray-600">{{ claim.item_type }}</td><td class="px-4 py-2 text-gray-600">{{ claim.status }}</td><td class="px-4 py-2 text-gray-600">{{ claim.created_at.strftime('%Y-%m-%d') }}</td></tr>{% endfor %}</tbody></table>{% else %}<p class="p-6 text-center text-sm text-gray-500">No claims found.</p>{% endif %}</div>
+            </div>
+        {% endif %}
     </div>
     {% endif %}
 </div>

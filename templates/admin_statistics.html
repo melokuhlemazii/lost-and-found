@@ -1,326 +1,213 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div class="container py-4">
-    <!-- Page Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="space-y-10">
+    <!-- Header -->
+    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
-            <h1 class="mb-0">
-                <i class="fas fa-chart-bar me-2"></i>Statistics Dashboard
-            </h1>
-            <p class="text-muted mb-0">Comprehensive analytics and insights</p>
+            <h1 class="text-2xl font-semibold tracking-tight flex items-center gap-2"><i class="fas fa-chart-bar text-primary-600"></i><span>Statistics Dashboard</span></h1>
+            <p class="text-sm text-gray-600">Comprehensive analytics and insights</p>
         </div>
-        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
-        </a>
+        <a href="{{ url_for('admin_dashboard') }}" class="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium shadow-sm hover:bg-gray-50"><i class="fas fa-arrow-left"></i>Back to Dashboard</a>
     </div>
 
-    <!-- Items by Status Section -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="h4 mb-0">
-                        <i class="fas fa-list-alt me-2"></i>Items by Status
-                    </h2>
+    <!-- Items by Status -->
+    <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="flex items-center gap-2 border-b px-6 py-4">
+            <h2 class="text-sm font-semibold tracking-wide flex items-center gap-2 text-gray-800"><i class="fas fa-list-alt text-primary-500"></i>Items by Status</h2>
+        </div>
+        <div class="p-6 grid gap-10 md:grid-cols-2">
+            <!-- Lost Items by Status -->
+            <div>
+                <h3 class="text-sm font-semibold uppercase tracking-wide text-red-600 mb-4 flex items-center gap-2"><i class="fas fa-exclamation-triangle"></i>Lost Items by Status</h3>
+                {% if lost_by_status %}
+                <div class="overflow-hidden rounded-lg border border-gray-100">
+                    <table class="min-w-full text-sm">
+                        <thead class="bg-gray-50 text-gray-600 text-xs uppercase tracking-wide">
+                            <tr><th class="px-4 py-2 font-semibold text-left">Status</th><th class="px-4 py-2 font-semibold text-left">Count</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            {% for status, count in lost_by_status %}
+                            <tr class="hover:bg-gray-50/70">
+                                <td class="px-4 py-2">
+                                    <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold {{ 'bg-amber-100 text-amber-700' if status=='active' else 'bg-emerald-100 text-emerald-700' if status=='claimed' else 'bg-gray-200 text-gray-700' }}">{{ status.title() }}</span>
+                                </td>
+                                <td class="px-4 py-2 font-semibold text-gray-800">{{ count }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <!-- Lost Items by Status -->
-                        <div class="col-md-6 mb-4">
-                            <h3 class="h5 mb-3 text-danger">
-                                <i class="fas fa-exclamation-triangle me-2"></i>Lost Items by Status
-                            </h3>
-                            {% if lost_by_status %}
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-hover">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>Status</th>
-                                                <th>Count</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for status, count in lost_by_status %}
-                                            <tr>
-                                                <td>
-                                                    <span class="badge {% if status == 'active' %}bg-warning text-dark{% elif status == 'claimed' %}bg-success{% else %}bg-secondary{% endif %}">
-                                                        {{ status.title() }}
-                                                    </span>
-                                                </td>
-                                                <td><strong>{{ count }}</strong></td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            {% else %}
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle me-2"></i>No lost items found.
-                                </div>
-                            {% endif %}
+                {% else %}
+                <div class="flex items-center gap-3 rounded-md border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-700"><i class="fas fa-info-circle"></i><span>No lost items found.</span></div>
+                {% endif %}
+            </div>
+            <!-- Found Items by Status -->
+            <div>
+                <h3 class="text-sm font-semibold uppercase tracking-wide text-emerald-600 mb-4 flex items-center gap-2"><i class="fas fa-hand-holding-heart"></i>Found Items by Status</h3>
+                {% if found_by_status %}
+                <div class="overflow-hidden rounded-lg border border-gray-100">
+                    <table class="min-w-full text-sm">
+                        <thead class="bg-gray-50 text-gray-600 text-xs uppercase tracking-wide">
+                            <tr><th class="px-4 py-2 font-semibold text-left">Status</th><th class="px-4 py-2 font-semibold text-left">Count</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            {% for status, count in found_by_status %}
+                            <tr class="hover:bg-gray-50/70">
+                                <td class="px-4 py-2">
+                                    <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold {{ 'bg-amber-100 text-amber-700' if status=='active' else 'bg-emerald-100 text-emerald-700' if status=='claimed' else 'bg-gray-200 text-gray-700' }}">{{ status.title() }}</span>
+                                </td>
+                                <td class="px-4 py-2 font-semibold text-gray-800">{{ count }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="flex items-center gap-3 rounded-md border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-700"><i class="fas fa-info-circle"></i><span>No found items found.</span></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Claims by Status -->
+    <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="flex items-center gap-2 border-b px-6 py-4">
+            <h2 class="text-sm font-semibold tracking-wide flex items-center gap-2 text-gray-800"><i class="fas fa-clipboard-list text-primary-500"></i>Claims by Status</h2>
+        </div>
+        <div class="p-6">
+            {% if claims_by_status %}
+            <div class="overflow-hidden rounded-lg border border-gray-100 max-w-md">
+                <table class="min-w-full text-sm">
+                    <thead class="bg-gray-50 text-gray-600 text-xs uppercase tracking-wide"><tr><th class="px-4 py-2 font-semibold text-left">Status</th><th class="px-4 py-2 font-semibold text-left">Count</th></tr></thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% for status, count in claims_by_status %}
+                        <tr class="hover:bg-gray-50/70">
+                            <td class="px-4 py-2"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold {{ 'bg-amber-100 text-amber-700' if status=='pending' else 'bg-emerald-100 text-emerald-700' if status=='approved' else 'bg-red-100 text-red-700' if status=='rejected' else 'bg-gray-200 text-gray-700' }}">{{ status.title() }}</span></td>
+                            <td class="px-4 py-2 font-semibold text-gray-800">{{ count }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="flex items-center gap-3 rounded-md border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-700"><i class="fas fa-info-circle"></i><span>No claims found.</span></div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Items by Category -->
+    <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="flex items-center gap-2 border-b px-6 py-4">
+            <h2 class="text-sm font-semibold tracking-wide flex items-center gap-2 text-gray-800"><i class="fas fa-th-large text-primary-500"></i>Items by Category</h2>
+        </div>
+        <div class="p-6 grid gap-10 md:grid-cols-2">
+            <!-- Lost Items by Category -->
+            <div>
+                <h3 class="text-sm font-semibold uppercase tracking-wide text-red-600 mb-4 flex items-center gap-2"><i class="fas fa-exclamation-triangle"></i>Lost Items by Category</h3>
+                {% if lost_by_category %}
+                <div class="overflow-hidden rounded-lg border border-gray-100">
+                    <table class="min-w-full text-sm">
+                        <thead class="bg-gray-50 text-gray-600 text-xs uppercase tracking-wide"><tr><th class="px-4 py-2 font-semibold text-left">Category</th><th class="px-4 py-2 font-semibold text-left">Count</th></tr></thead>
+                        <tbody class="divide-y divide-gray-100">{% for category, count in lost_by_category %}<tr class="hover:bg-gray-50/70"><td class="px-4 py-2 text-gray-700">{{ category.replace('_', ' ').title() }}</td><td class="px-4 py-2 font-semibold text-gray-800">{{ count }}</td></tr>{% endfor %}</tbody>
+                    </table>
+                </div>
+                {% else %}<div class="flex items-center gap-3 rounded-md border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-700"><i class="fas fa-info-circle"></i><span>No lost items found.</span></div>{% endif %}
+            </div>
+            <!-- Found Items by Category -->
+            <div>
+                <h3 class="text-sm font-semibold uppercase tracking-wide text-emerald-600 mb-4 flex items-center gap-2"><i class="fas fa-hand-holding-heart"></i>Found Items by Category</h3>
+                {% if found_by_category %}
+                <div class="overflow-hidden rounded-lg border border-gray-100">
+                    <table class="min-w-full text-sm">
+                        <thead class="bg-gray-50 text-gray-600 text-xs uppercase tracking-wide"><tr><th class="px-4 py-2 font-semibold text-left">Category</th><th class="px-4 py-2 font-semibold text-left">Count</th></tr></thead>
+                        <tbody class="divide-y divide-gray-100">{% for category, count in found_by_category %}<tr class="hover:bg-gray-50/70"><td class="px-4 py-2 text-gray-700">{{ category.replace('_', ' ').title() }}</td><td class="px-4 py-2 font-semibold text-gray-800">{{ count }}</td></tr>{% endfor %}</tbody>
+                    </table>
+                </div>
+                {% else %}<div class="flex items-center gap-3 rounded-md border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-700"><i class="fas fa-info-circle"></i><span>No found items found.</span></div>{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Rate Calculations -->
+    <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="flex items-center gap-2 border-b px-6 py-4">
+            <h2 class="text-sm font-semibold tracking-wide flex items-center gap-2 text-gray-800"><i class="fas fa-chart-pie text-primary-500"></i>Success Rate Calculations</h2>
+        </div>
+        <div class="p-6">
+            {% if lost_by_status and found_by_status %}
+                {% set total_lost = lost_by_status | sum(attribute=1) %}
+                {% set total_found = found_by_status | sum(attribute=1) %}
+                {% set claimed_lost = lost_by_status | selectattr(0, 'equalto', 'claimed') | map(attribute=1) | sum %}
+                {% set claimed_found = found_by_status | selectattr(0, 'equalto', 'claimed') | map(attribute=1) | sum %}
+                <div class="grid gap-8 md:grid-cols-2">
+                    <!-- Lost Items Success Rate -->
+                    <div class="rounded-lg border border-gray-100 bg-white shadow-sm">
+                        <div class="border-b px-5 py-3 flex items-center gap-2">
+                            <h3 class="text-sm font-semibold tracking-wide text-red-600 flex items-center gap-2"><i class="fas fa-exclamation-triangle"></i>Lost Items Success Rate</h3>
                         </div>
-                        
-                        <!-- Found Items by Status -->
-                        <div class="col-md-6 mb-4">
-                            <h3 class="h5 mb-3 text-success">
-                                <i class="fas fa-hand-holding-heart me-2"></i>Found Items by Status
-                            </h3>
-                            {% if found_by_status %}
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-hover">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>Status</th>
-                                                <th>Count</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for status, count in found_by_status %}
-                                            <tr>
-                                                <td>
-                                                    <span class="badge {% if status == 'active' %}bg-warning text-dark{% elif status == 'claimed' %}bg-success{% else %}bg-secondary{% endif %}">
-                                                        {{ status.title() }}
-                                                    </span>
-                                                </td>
-                                                <td><strong>{{ count }}</strong></td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
+                        <div class="p-5">
+                            <div class="flex justify-between text-center mb-6">
+                                <div class="flex-1">
+                                    <p class="text-xs uppercase tracking-wide text-gray-500 mb-1">Total Lost</p>
+                                    <p class="text-xl font-bold text-gray-800">{{ total_lost }}</p>
                                 </div>
-                            {% else %}
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle me-2"></i>No found items found.
+                                <div class="flex-1">
+                                    <p class="text-xs uppercase tracking-wide text-gray-500 mb-1">Claimed</p>
+                                    <p class="text-xl font-bold text-emerald-600">{{ claimed_lost }}</p>
                                 </div>
-                            {% endif %}
+                                <div class="flex-1">
+                                    <p class="text-xs uppercase tracking-wide text-gray-500 mb-1">Success</p>
+                                    <p class="text-xl font-bold text-indigo-600">{% if total_lost > 0 %}{{ "%.1f"|format((claimed_lost / total_lost) * 100) }}%{% else %}0%{% endif %}</p>
+                                </div>
+                            </div>
+                            {% set lost_rate = (claimed_lost / total_lost * 100) if total_lost > 0 else 0 %}
+                                                                                            <div class="h-3 w-full rounded-full bg-gray-100 overflow-hidden" aria-label="Lost items success rate bar">
+                                                                                                <div class="h-full bg-gradient-to-r from-indigo-500 to-indigo-600 transition-all" data-progress="{{ lost_rate|round(1) }}" style="width:0"></div>
+                                                                                            </div>
+                        </div>
+                    </div>
+                    <!-- Found Items Success Rate -->
+                    <div class="rounded-lg border border-gray-100 bg-white shadow-sm">
+                        <div class="border-b px-5 py-3 flex items-center gap-2">
+                            <h3 class="text-sm font-semibold tracking-wide text-emerald-600 flex items-center gap-2"><i class="fas fa-hand-holding-heart"></i>Found Items Success Rate</h3>
+                        </div>
+                        <div class="p-5">
+                            <div class="flex justify-between text-center mb-6">
+                                <div class="flex-1">
+                                    <p class="text-xs uppercase tracking-wide text-gray-500 mb-1">Total Found</p>
+                                    <p class="text-xl font-bold text-gray-800">{{ total_found }}</p>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-xs uppercase tracking-wide text-gray-500 mb-1">Claimed</p>
+                                    <p class="text-xl font-bold text-emerald-600">{{ claimed_found }}</p>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-xs uppercase tracking-wide text-gray-500 mb-1">Success</p>
+                                    <p class="text-xl font-bold text-indigo-600">{% if total_found > 0 %}{{ "%.1f"|format((claimed_found / total_found) * 100) }}%{% else %}0%{% endif %}</p>
+                                </div>
+                            </div>
+                            {% set found_rate = (claimed_found / total_found * 100) if total_found > 0 else 0 %}
+                                                                                            <div class="h-3 w-full rounded-full bg-gray-100 overflow-hidden" aria-label="Found items success rate bar">
+                                                                                                <div class="h-full bg-gradient-to-r from-emerald-500 to-emerald-600 transition-all" data-progress="{{ found_rate|round(1) }}" style="width:0"></div>
+                                                                                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Claims by Status Section -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="h4 mb-0">
-                        <i class="fas fa-clipboard-list me-2"></i>Claims by Status
-                    </h2>
-                </div>
-                <div class="card-body">
-                    {% if claims_by_status %}
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Status</th>
-                                        <th>Count</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for status, count in claims_by_status %}
-                                    <tr>
-                                        <td>
-                                            <span class="badge {% if status == 'pending' %}bg-warning text-dark{% elif status == 'approved' %}bg-success{% elif status == 'rejected' %}bg-danger{% else %}bg-secondary{% endif %}">
-                                                {{ status.title() }}
-                                            </span>
-                                        </td>
-                                        <td><strong>{{ count }}</strong></td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    {% else %}
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle me-2"></i>No claims found.
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Items by Category Section -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="h4 mb-0">
-                        <i class="fas fa-th-large me-2"></i>Items by Category
-                    </h2>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <!-- Lost Items by Category -->
-                        <div class="col-md-6 mb-4">
-                            <h3 class="h5 mb-3 text-danger">
-                                <i class="fas fa-exclamation-triangle me-2"></i>Lost Items by Category
-                            </h3>
-                            {% if lost_by_category %}
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-hover">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>Category</th>
-                                                <th>Count</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for category, count in lost_by_category %}
-                                            <tr>
-                                                <td>{{ category.replace('_', ' ').title() }}</td>
-                                                <td><strong>{{ count }}</strong></td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            {% else %}
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle me-2"></i>No lost items found.
-                                </div>
-                            {% endif %}
-                        </div>
-                        
-                        <!-- Found Items by Category -->
-                        <div class="col-md-6 mb-4">
-                            <h3 class="h5 mb-3 text-success">
-                                <i class="fas fa-hand-holding-heart me-2"></i>Found Items by Category
-                            </h3>
-                            {% if found_by_category %}
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-hover">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>Category</th>
-                                                <th>Count</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for category, count in found_by_category %}
-                                            <tr>
-                                                <td>{{ category.replace('_', ' ').title() }}</td>
-                                                <td><strong>{{ count }}</strong></td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            {% else %}
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle me-2"></i>No found items found.
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Success Rate Calculations Section -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="h4 mb-0">
-                        <i class="fas fa-chart-pie me-2"></i>Success Rate Calculations
-                    </h2>
-                </div>
-                <div class="card-body">
-                    {% if lost_by_status and found_by_status %}
-                        {% set total_lost = lost_by_status | sum(attribute=1) %}
-                        {% set total_found = found_by_status | sum(attribute=1) %}
-                        {% set claimed_lost = lost_by_status | selectattr(0, 'equalto', 'claimed') | map(attribute=1) | sum %}
-                        {% set claimed_found = found_by_status | selectattr(0, 'equalto', 'claimed') | map(attribute=1) | sum %}
-                        
-                        <div class="row">
-                            <!-- Lost Items Success Rate -->
-                            <div class="col-md-6 mb-4">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h3 class="h5 mb-0">
-                                            <i class="fas fa-exclamation-triangle me-2"></i>Lost Items Success Rate
-                                        </h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row text-center">
-                                            <div class="col-4">
-                                                <div class="border-end">
-                                                    <h3 class="text-primary">{{ total_lost }}</h3>
-                                                    <small class="text-muted">Total Lost</small>
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
-                                                <div class="border-end">
-                                                    <h3 class="text-success">{{ claimed_lost }}</h3>
-                                                    <small class="text-muted">Claimed</small>
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
-                                                <h3 class="text-warning">
-                                                    {% if total_lost > 0 %}
-                                                        {{ "%.1f"|format((claimed_lost / total_lost) * 100) }}%
-                                                    {% else %}
-                                                        0%
-                                                    {% endif %}
-                                                </h3>
-                                                <small class="text-muted">Success Rate</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Found Items Success Rate -->
-                            <div class="col-md-6 mb-4">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h3 class="h5 mb-0">
-                                            <i class="fas fa-hand-holding-heart me-2"></i>Found Items Success Rate
-                                        </h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row text-center">
-                                            <div class="col-4">
-                                                <div class="border-end">
-                                                    <h3 class="text-primary">{{ total_found }}</h3>
-                                                    <small class="text-muted">Total Found</small>
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
-                                                <div class="border-end">
-                                                    <h3 class="text-success">{{ claimed_found }}</h3>
-                                                    <small class="text-muted">Claimed</small>
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
-                                                <h3 class="text-warning">
-                                                    {% if total_found > 0 %}
-                                                        {{ "%.1f"|format((claimed_found / total_found) * 100) }}%
-                                                    {% else %}
-                                                        0%
-                                                    {% endif %}
-                                                </h3>
-                                                <small class="text-muted">Success Rate</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% else %}
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle me-2"></i>No data available for success rate calculations.
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
+            {% else %}
+            <div class="flex items-center gap-3 rounded-md border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-700"><i class="fas fa-info-circle"></i><span>No data available for success rate calculations.</span></div>
+            {% endif %}
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+        document.querySelectorAll('[data-progress]').forEach(function(el){
+            var v = parseFloat(el.getAttribute('data-progress'));
+            if(!isNaN(v)){
+                v = Math.min(100, Math.max(0, v));
+                el.style.width = v + '%';
+            }
+        });
+    });
+</script>
 {% endblock %}

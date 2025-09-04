@@ -1,97 +1,62 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div class="container py-4">
-    <h1 class="mb-4">Manage Categories</h1>
-
-    <div class="card mb-4">
-        <div class="card-header">
-            <h2 class="h4 mb-0">Add New Category</h2>
+<div class="space-y-8">
+    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div>
+            <h1 class="text-2xl font-semibold tracking-tight flex items-center gap-2"><i class="fas fa-tags text-primary-600"></i><span>Manage Categories</span></h1>
+            <p class="text-sm text-gray-600">Add, activate or deactivate item categories.</p>
         </div>
-        <div class="card-body">
-            <form method="POST" action="{{ url_for('admin_categories') }}">
-                {{ form.hidden_tag() }}
-                
-                <div class="mb-3">
-                    {{ form.name.label(class="form-label") }}
-                    {{ form.name(class="form-control") }}
-                    {% if form.name.errors %}
-                        {% for error in form.name.errors %}
-                            <div class="text-danger small mt-1">{{ error }}</div>
-                        {% endfor %}
-                    {% endif %}
+        <a href="{{ url_for('admin_dashboard') }}" class="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium shadow-sm hover:bg-gray-50"><i class="fas fa-arrow-left"></i>Dashboard</a>
+    </div>
+
+    <div class="grid gap-8 md:grid-cols-2">
+        <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
+            <div class="border-b px-5 py-3"><h2 class="text-sm font-semibold tracking-wide flex items-center gap-2"><i class="fas fa-plus text-primary-500"></i>New Category</h2></div>
+            <form method="POST" action="{{ url_for('admin_categories') }}" class="p-5 space-y-5">{{ form.hidden_tag() }}
+                <div class="space-y-1">
+                    {{ form.name.label(class_='text-xs font-medium text-gray-600') }}
+                    {{ form.name(class_='w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500', placeholder='Category name') }}
+                    {% if form.name.errors %}<p class="text-xs text-red-600">{{ form.name.errors[0] }}</p>{% endif %}
                 </div>
-                
-                <div class="mb-3">
-                    {{ form.description.label(class="form-label") }}
-                    {{ form.description(class="form-control") }}
-                    {% if form.description.errors %}
-                        {% for error in form.description.errors %}
-                            <div class="text-danger small mt-1">{{ error }}</div>
-                        {% endfor %}
-                    {% endif %}
+                <div class="space-y-1">
+                    {{ form.description.label(class_='text-xs font-medium text-gray-600') }}
+                    {{ form.description(class_='w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500', placeholder='Optional description') }}
+                    {% if form.description.errors %}<p class="text-xs text-red-600">{{ form.description.errors[0] }}</p>{% endif %}
                 </div>
-                
-                <div class="mb-3 form-check">
-                    {{ form.is_active(class="form-check-input") }}
-                    {{ form.is_active.label(class="form-check-label") }}
-                </div>
-                
-                <div class="mb-3">
-                    {{ form.submit(class="btn btn-primary") }}
-                </div>
+                <div class="flex items-center gap-2">{{ form.is_active(class_='h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500') }}{{ form.is_active.label(class_='text-sm font-medium text-gray-700') }}</div>
+                <div class="pt-2">{{ form.submit(class_='inline-flex items-center gap-2 rounded-md bg-primary-600 px-5 py-2 text-sm font-semibold text-white shadow hover:bg-primary-700') }}</div>
             </form>
         </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header">
-            <h2 class="h4 mb-0">Existing Categories</h2>
+        <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+            <div class="flex items-center justify-between border-b px-5 py-3"><h2 class="text-sm font-semibold tracking-wide flex items-center gap-2"><i class="fas fa-database text-primary-500"></i>Existing Categories</h2></div>
+            <div class="overflow-x-auto">
+                {% if categories %}
+                <table class="min-w-full text-sm">
+                    <thead class="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-600">
+                        <tr><th class="px-4 py-2 font-semibold">ID</th><th class="px-4 py-2 font-semibold">Name</th><th class="px-4 py-2 font-semibold">Description</th><th class="px-4 py-2 font-semibold">Active</th><th class="px-4 py-2 font-semibold">Created</th><th class="px-4 py-2 font-semibold">Actions</th></tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% for category in categories %}
+                        <tr class="hover:bg-gray-50/70">
+                            <td class="px-4 py-2 text-gray-600">{{ category.id }}</td>
+                            <td class="px-4 py-2 font-medium text-gray-800">{{ category.name }}</td>
+                            <td class="px-4 py-2 text-gray-600">{{ category.description or 'No description' }}</td>
+                            <td class="px-4 py-2">{% if category.is_active %}<span class="inline-flex rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">Yes</span>{% else %}<span class="inline-flex rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600">No</span>{% endif %}</td>
+                            <td class="px-4 py-2 text-gray-600">{{ category.created_at.strftime('%Y-%m-%d') }}</td>
+                            <td class="px-4 py-2">
+                                <form method="POST" action="{{ url_for('admin_toggle_category', category_id=category.id) }}" onsubmit="return confirm('Toggle this category?');">
+                                    <button type="submit" class="inline-flex items-center rounded-md {{ 'bg-amber-600 hover:bg-amber-700' if category.is_active else 'bg-emerald-600 hover:bg-emerald-700' }} px-3 py-1.5 text-xs font-semibold text-white shadow">{{ 'Deactivate' if category.is_active else 'Activate' }}</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="p-6 text-center text-sm text-gray-500">No categories found.</p>
+                {% endif %}
+            </div>
         </div>
-        <div class="card-body">
-            {% if categories %}
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th>Active</th>
-                                <th>Created</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for category in categories %}
-                            <tr>
-                                <td>{{ category.id }}</td>
-                                <td>{{ category.name }}</td>
-                                <td>{{ category.description or 'No description' }}</td>
-                                <td>{{ 'Yes' if category.is_active else 'No' }}</td>
-                                <td>{{ category.created_at.strftime('%Y-%m-%d') }}</td>
-                                <td>
-                                    <form method="POST" action="{{ url_for('admin_toggle_category', category_id=category.id) }}" class="d-inline">
-                                        <button type="submit" class="btn btn-sm {{ 'btn-warning' if category.is_active else 'btn-success' }}">
-                                            {{ 'Deactivate' if category.is_active else 'Activate' }}
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% else %}
-                <p class="text-center text-muted">No categories found.</p>
-            {% endif %}
-        </div>
-    </div>
-
-    <div class="mt-4">
-        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
-        </a>
     </div>
 </div>
 {% endblock %}

@@ -1,158 +1,91 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-lg-8 col-xl-6">
-        <div class="form-container fade-in-up">
-            <div class="text-center mb-4">
-                <div class="mb-3">
-                    <i class="fas fa-gavel fa-3x text-primary"></i>
-                </div>
-                <h2 class="mb-2">Claim an Item</h2>
-                <p class="text-muted">Submit a claim for an item you believe belongs to you</p>
-            </div>
-
-            {% if request.args.get('item_type') and request.args.get('item_id') %}
-                <div class="alert alert-info-modern mb-4">
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <div>
-                            <strong>Claiming Item</strong><br>
-                            <small>You are claiming a {{ request.args.get('item_type') }} item (ID: {{ request.args.get('item_id') }})</small>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-
-            <form method="POST">
-                {{ form.hidden_tag() }}
-                
-                <div class="form-group">
-                    {{ form.item_type.label(class="form-label") }}
-                    {{ form.item_type(class="form-select") }}
-                    {% if form.item_type.errors %}
-                        {% for error in form.item_type.errors %}
-                            <div class="text-danger small mt-1">{{ error }}</div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-                
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            {{ form.full_names.label(class="form-label") }}
-                            {{ form.full_names(class="form-control", placeholder="Your full name") }}
-                            {% if form.full_names.errors %}
-                                {% for error in form.full_names.errors %}
-                                    <div class="text-danger small mt-1">{{ error }}</div>
-                                {% endfor %}
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            {{ form.student_number.label(class="form-label") }}
-                            {{ form.student_number(class="form-control", placeholder="Your student number") }}
-                            {% if form.student_number.errors %}
-                                {% for error in form.student_number.errors %}
-                                    <div class="text-danger small mt-1">{{ error }}</div>
-                                {% endfor %}
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    {{ form.student_email.label(class="form-label") }}
-                    {{ form.student_email(class="form-control", placeholder="your.email@university.edu") }}
-                    {% if form.student_email.errors %}
-                        {% for error in form.student_email.errors %}
-                            <div class="text-danger small mt-1">{{ error }}</div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-                
-                <div class="form-group">
-                    {{ form.description.label(class="form-label") }}
-                    {{ form.description(class="form-control", rows="4", placeholder="Provide detailed information about why this item belongs to you...") }}
-                    {% if form.description.errors %}
-                        {% for error in form.description.errors %}
-                            <div class="text-danger small mt-1">{{ error }}</div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-                
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary me-md-2">
-                        <i class="fas fa-arrow-left me-1"></i>Cancel
-                    </a>
-                    {{ form.submit(class="btn btn-primary") }}
-                </div>
-            </form>
-        </div>
-
-        <!-- Information Card -->
-        <div class="modern-card mt-4">
-            <div class="modern-card-header">
-                <h5 class="mb-0">
-                    <i class="fas fa-info-circle me-2"></i>Important Information
-                </h5>
-            </div>
-            <div class="modern-card-body">
-                <ul class="list-unstyled mb-0">
-                    <li class="mb-2">
-                        <i class="fas fa-check-circle text-success me-2"></i>
-                        Please provide accurate information about the item you are claiming.
-                    </li>
-                    <li class="mb-2">
-                        <i class="fas fa-user-shield text-primary me-2"></i>
-                        Your claim will be reviewed by an administrator.
-                    </li>
-                    <li class="mb-2">
-                        <i class="fas fa-envelope text-info me-2"></i>
-                        You will be notified of the claim status via email.
-                    </li>
-                    <li class="mb-0">
-                        <i class="fas fa-id-card text-warning me-2"></i>
-                        Make sure you can provide proof of ownership if requested.
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Quick Actions Card -->
-        <div class="modern-card mt-4">
-            <div class="modern-card-header">
-                <h5 class="mb-0">
-                    <i class="fas fa-lightning-bolt me-2"></i>Quick Actions
-                </h5>
-            </div>
-            <div class="modern-card-body">
-                <div class="row g-2">
-                    <div class="col-md-3 col-sm-6">
-                        <a href="{{ url_for('browse_lost_items') }}" class="btn btn-outline-danger w-100">
-                            <i class="fas fa-exclamation-triangle me-1"></i>Lost Items
-                        </a>
-                    </div>
-                    <div class="col-md-3 col-sm-6">
-                        <a href="{{ url_for('browse_found_items') }}" class="btn btn-outline-success w-100">
-                            <i class="fas fa-hand-holding-heart me-1"></i>Found Items
-                        </a>
-                    </div>
-                    <div class="col-md-3 col-sm-6">
-                        <a href="{{ url_for('search_items') }}" class="btn btn-outline-info w-100">
-                            <i class="fas fa-search me-1"></i>Search
-                        </a>
-                    </div>
-                    <div class="col-md-3 col-sm-6">
-                        <a href="{{ url_for('user_dashboard') }}" class="btn btn-outline-secondary w-100">
-                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
-                        </a>
-                    </div>
-                </div>
+<div class="max-w-3xl mx-auto space-y-10">
+  <div class="rounded-2xl border border-primary-200 bg-white shadow-sm overflow-hidden">
+    <div class="bg-gradient-to-r from-primary-600 to-primary-500 px-6 py-6 text-white">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-gavel text-2xl"></i>
+            <div>
+                <h1 class="text-xl font-semibold">Claim an Item</h1>
+                <p class="text-primary-100 text-sm">Submit a claim for an item you believe belongs to you</p>
             </div>
         </div>
     </div>
+    <div class="p-6">
+        {% if request.args.get('item_type') and request.args.get('item_id') %}
+        <div class="mb-6 rounded-md border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800 flex items-start gap-3">
+            <i class="fas fa-info-circle mt-0.5"></i>
+            <div>
+                <p class="font-medium">Claiming Item</p>
+                <p class="text-blue-700">You are claiming a {{ request.args.get('item_type') }} item (ID: {{ request.args.get('item_id') }})</p>
+            </div>
+        </div>
+        {% endif %}
+        <form method="POST" class="space-y-6">
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.item_type.label(class="mb-1 block text-sm font-medium text-gray-700") }}
+                {{ form.item_type(class="block w-full rounded-md border border-gray-300 bg-white py-2 px-3 text-sm shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/40") }}
+                {% for error in form.item_type.errors %}<p class="mt-1 text-xs text-red-600">{{ error }}</p>{% endfor %}
+            </div>
+            <div class="grid sm:grid-cols-2 gap-6">
+                <div>
+                    {{ form.full_names.label(class="mb-1 block text-sm font-medium text-gray-700") }}
+                    {{ form.full_names(class="block w-full rounded-md border border-gray-300 bg-white py-2 px-3 text-sm shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/40", placeholder="Your full name") }}
+                    {% for error in form.full_names.errors %}<p class="mt-1 text-xs text-red-600">{{ error }}</p>{% endfor %}
+                </div>
+                <div>
+                    {{ form.student_number.label(class="mb-1 block text-sm font-medium text-gray-700") }}
+                    {{ form.student_number(class="block w-full rounded-md border border-gray-300 bg-white py-2 px-3 text-sm shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/40", placeholder="Your student number") }}
+                    {% for error in form.student_number.errors %}<p class="mt-1 text-xs text-red-600">{{ error }}</p>{% endfor %}
+                </div>
+            </div>
+            <div>
+                {{ form.student_email.label(class="mb-1 block text-sm font-medium text-gray-700") }}
+                {{ form.student_email(class="block w-full rounded-md border border-gray-300 bg-white py-2 px-3 text-sm shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/40", placeholder="your.email@university.edu") }}
+                {% for error in form.student_email.errors %}<p class="mt-1 text-xs text-red-600">{{ error }}</p>{% endfor %}
+            </div>
+            <div>
+                {{ form.description.label(class="mb-1 block text-sm font-medium text-gray-700") }}
+                {{ form.description(class="block w-full rounded-md border border-gray-300 bg-white py-2 px-3 text-sm shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/40", rows="4", placeholder="Provide detailed information about why this item belongs to you...") }}
+                {% for error in form.description.errors %}<p class="mt-1 text-xs text-red-600">{{ error }}</p>{% endfor %}
+            </div>
+            <div class="flex items-center justify-end gap-3 pt-2">
+                <a href="{{ url_for('index') }}" class="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-5 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"><i class="fas fa-arrow-left"></i><span>Cancel</span></a>
+                {{ form.submit(class="inline-flex items-center gap-2 rounded-md bg-primary-600 px-6 py-2 text-sm font-medium text-white shadow hover:bg-primary-700") }}
+            </div>
+        </form>
+    </div>
+  </div>
+  <div class="grid md:grid-cols-2 gap-6">
+    <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="px-5 py-4 border-b border-gray-200 flex items-center gap-2">
+            <i class="fas fa-info-circle text-primary-600"></i>
+            <h2 class="text-sm font-semibold text-gray-700">Important Information</h2>
+        </div>
+        <div class="p-5">
+            <ul class="space-y-3 text-sm text-gray-600">
+                <li class="flex gap-3"><i class="fas fa-check-circle text-green-600 mt-0.5"></i><span>Please provide accurate information about the item you are claiming.</span></li>
+                <li class="flex gap-3"><i class="fas fa-user-shield text-primary-600 mt-0.5"></i><span>Your claim will be reviewed by an administrator.</span></li>
+                <li class="flex gap-3"><i class="fas fa-envelope text-blue-600 mt-0.5"></i><span>You will be notified of the claim status via email.</span></li>
+                <li class="flex gap-3"><i class="fas fa-id-card text-amber-500 mt-0.5"></i><span>Be ready to provide proof of ownership if requested.</span></li>
+            </ul>
+        </div>
+    </div>
+    <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="px-5 py-4 border-b border-gray-200 flex items-center gap-2">
+            <i class="fas fa-bolt text-yellow-500"></i>
+            <h2 class="text-sm font-semibold text-gray-700">Quick Actions</h2>
+        </div>
+        <div class="p-5 grid grid-cols-2 gap-4 text-sm">
+            <a href="{{ url_for('browse_lost_items') }}" class="flex items-center justify-center gap-2 rounded-md border border-red-200 bg-red-50 px-4 py-2 font-medium text-red-700 hover:bg-red-100"><i class="fas fa-exclamation-triangle"></i><span>Lost Items</span></a>
+            <a href="{{ url_for('browse_found_items') }}" class="flex items-center justify-center gap-2 rounded-md border border-green-200 bg-green-50 px-4 py-2 font-medium text-green-700 hover:bg-green-100"><i class="fas fa-hand-holding-heart"></i><span>Found Items</span></a>
+            <a href="{{ url_for('search_items') }}" class="flex items-center justify-center gap-2 rounded-md border border-primary-200 bg-primary-50 px-4 py-2 font-medium text-primary-700 hover:bg-primary-100"><i class="fas fa-search"></i><span>Search</span></a>
+            <a href="{{ url_for('user_dashboard') }}" class="flex items-center justify-center gap-2 rounded-md border border-indigo-200 bg-indigo-50 px-4 py-2 font-medium text-indigo-700 hover:bg-indigo-100"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+        </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -161,11 +94,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
     const itemType = urlParams.get('item_type');
     const itemId = urlParams.get('item_id');
-    
     if (itemType && itemId) {
         const itemTypeSelect = document.getElementById('item_type');
         const itemIdInput = document.getElementById('item_id');
-        
         if (itemTypeSelect) itemTypeSelect.value = itemType;
         if (itemIdInput) itemIdInput.value = itemId;
     }

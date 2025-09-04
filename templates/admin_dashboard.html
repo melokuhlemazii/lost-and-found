@@ -1,268 +1,246 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container py-4">
-    <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4 fade-in-up">
+<div class="space-y-10">
+    <!-- Header -->
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-            <h1 class="mb-1">
-                <i class="fas fa-tachometer-alt me-2 text-primary"></i>Admin Dashboard
+            <h1 class="text-2xl font-semibold tracking-tight flex items-center gap-2">
+                <i class="fas fa-gauge text-primary-600"></i>
+                <span>Admin Dashboard</span>
             </h1>
-            <p class="text-muted mb-0">Manage your Lost & Found portal</p>
+            <p class="text-sm text-gray-600">Manage the Lost &amp; Found portal.</p>
         </div>
-        <div class="d-flex gap-2">
-            <a href="{{ url_for('admin_statistics') }}" class="btn btn-outline-primary">
-                <i class="fas fa-chart-bar me-1"></i>Statistics
-            </a>
-            <a href="{{ url_for('admin_users') }}" class="btn btn-outline-secondary">
-                <i class="fas fa-users me-1"></i>Users
-            </a>
+        <div class="flex flex-wrap gap-2">
+            <a href="{{ url_for('admin_statistics') }}" class="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium shadow-sm hover:bg-gray-50"><i class="fas fa-chart-bar"></i>Statistics</a>
+            <a href="{{ url_for('admin_users') }}" class="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium shadow-sm hover:bg-gray-50"><i class="fas fa-users"></i>Users</a>
         </div>
     </div>
 
-    <!-- Statistics Section -->
-    <div class="mb-5">
-        <h2 class="mb-4 h4">
-            <i class="fas fa-chart-pie me-2"></i>Quick Statistics
-        </h2>
-        <div class="row">
-            <div class="col-lg-6 col-md-12 mb-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <h3 class="h5 mb-0">
-                            <i class="fas fa-chart-pie me-2"></i>Overall Totals
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row text-center">
-                            <div class="col-sm-4 mb-3 mb-sm-0">
-                                <div class="stats-card p-3 rounded bg-light-danger">
-                                    <div class="stats-icon text-danger mb-2">
-                                        <i class="fas fa-box-open fa-2x"></i>
-                                    </div>
-                                    <div class="stats-number display-6 text-danger fw-bold">{{ total_lost or 0 }}</div>
-                                    <div class="stats-label text-muted">Total Lost</div>
-                                </div>
-                            </div>
-                            <div class="col-sm-4 mb-3 mb-sm-0">
-                                <div class="stats-card p-3 rounded bg-light-primary">
-                                    <div class="stats-icon text-primary mb-2">
-                                        <i class="fas fa-hand-holding-heart fa-2x"></i>
-                                    </div>
-                                    <div class="stats-number display-6 text-primary fw-bold">{{ total_found or 0 }}</div>
-                                    <div class="stats-label text-muted">Total Found</div>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="stats-card p-3 rounded bg-light-info">
-                                    <div class="stats-icon text-info mb-2">
-                                        <i class="fas fa-check-circle fa-2x"></i>
-                                    </div>
-                                    <div class="stats-number display-6 text-info fw-bold">{{ total_claims or 0 }}</div>
-                                    <div class="stats-label text-muted">Total Claims</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Stats Grid -->
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="relative overflow-hidden rounded-xl border border-red-200 bg-gradient-to-br from-red-50 to-white p-5 shadow-sm">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs uppercase font-semibold tracking-wide text-red-600">Total Lost</p>
+                    <p class="mt-1 text-3xl font-bold text-red-700">{{ total_lost or 0 }}</p>
                 </div>
+                <i class="fas fa-box-open text-3xl text-red-300"></i>
             </div>
-            <div class="col-lg-6 col-md-12 mb-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-header bg-success text-white">
-                        <h3 class="h5 mb-0">
-                            <i class="fas fa-hourglass-half me-2"></i>Active Items
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row text-center">
-                            <div class="col-sm-4 mb-3 mb-sm-0">
-                                <div class="stats-card p-3 rounded bg-light-danger">
-                                    <div class="stats-icon text-danger mb-2">
-                                        <i class="fas fa-search fa-2x"></i>
-                                    </div>
-                                    <div class="stats-number display-6 text-danger fw-bold">{{ active_lost or 0 }}</div>
-                                    <div class="stats-label text-muted">Active Lost</div>
-                                </div>
-                            </div>
-                            <div class="col-sm-4 mb-3 mb-sm-0">
-                                <div class="stats-card p-3 rounded bg-light-primary">
-                                    <div class="stats-icon text-primary mb-2">
-                                        <i class="fas fa-hand-holding fa-2x"></i>
-                                    </div>
-                                    <div class="stats-number display-6 text-primary fw-bold">{{ active_found or 0 }}</div>
-                                    <div class="stats-label text-muted">Active Found</div>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="stats-card p-3 rounded bg-light-warning">
-                                    <div class="stats-icon text-warning mb-2">
-                                        <i class="fas fa-clock fa-2x"></i>
-                                    </div>
-                                    <div class="stats-number display-6 text-warning fw-bold">{{ pending_claims or 0 }}</div>
-                                    <div class="stats-label text-muted">Pending Claims</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        </div>
+        <div class="relative overflow-hidden rounded-xl border border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-5 shadow-sm">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs uppercase font-semibold tracking-wide text-indigo-600">Total Found</p>
+                    <p class="mt-1 text-3xl font-bold text-indigo-700">{{ total_found or 0 }}</p>
                 </div>
+                <i class="fas fa-hand-holding-heart text-3xl text-indigo-300"></i>
+            </div>
+        </div>
+        <div class="relative overflow-hidden rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-5 shadow-sm">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs uppercase font-semibold tracking-wide text-emerald-600">Total Claims</p>
+                    <p class="mt-1 text-3xl font-bold text-emerald-700">{{ total_claims or 0 }}</p>
+                </div>
+                <i class="fas fa-check-circle text-3xl text-emerald-300"></i>
+            </div>
+        </div>
+        <div class="relative overflow-hidden rounded-xl border border-amber-200 bg-gradient-to-br from-amber-50 to-white p-5 shadow-sm">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs uppercase font-semibold tracking-wide text-amber-600">Active Lost</p>
+                    <p class="mt-1 text-3xl font-bold text-amber-700">{{ active_lost or 0 }}</p>
+                </div>
+                <i class="fas fa-search text-3xl text-amber-300"></i>
+            </div>
+        </div>
+        <div class="relative overflow-hidden rounded-xl border border-sky-200 bg-gradient-to-br from-sky-50 to-white p-5 shadow-sm">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs uppercase font-semibold tracking-wide text-sky-600">Active Found</p>
+                    <p class="mt-1 text-3xl font-bold text-sky-700">{{ active_found or 0 }}</p>
+                </div>
+                <i class="fas fa-hand-holding text-3xl text-sky-300"></i>
+            </div>
+        </div>
+        <div class="relative overflow-hidden rounded-xl border border-fuchsia-200 bg-gradient-to-br from-fuchsia-50 to-white p-5 shadow-sm">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs uppercase font-semibold tracking-wide text-fuchsia-600">Pending Claims</p>
+                    <p class="mt-1 text-3xl font-bold text-fuchsia-700">{{ pending_claims or 0 }}</p>
+                </div>
+                <i class="fas fa-clock text-3xl text-fuchsia-300"></i>
             </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-6 mb-4">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h3 class="h5 mb-0"><i class="fas fa-box-open me-2"></i>Item Management</h3>
-                </div>
-                <div class="card-body d-flex flex-wrap gap-2">
-                    <a href="{{ url_for('admin_lost_items') }}" class="btn btn-primary"><i class="fas fa-search me-1"></i>Manage Lost Items</a>
-                    <a href="{{ url_for('admin_found_items') }}" class="btn btn-primary"><i class="fas fa-hand-holding-heart me-1"></i>Manage Found Items</a>
-                    <a href="{{ url_for('admin_claims') }}" class="btn btn-info text-white"><i class="fas fa-check-square me-1"></i>Manage Claims</a>
-                    <a href="{{ url_for('admin_expire_old_items') }}" class="btn btn-danger"><i class="fas fa-calendar-times me-1"></i>Expire Old Items</a>
-                </div>
+    <!-- Action Panels -->
+    <div class="grid gap-6 md:grid-cols-2">
+        <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
+            <div class="flex items-center justify-between border-b px-5 py-3">
+                <h2 class="text-sm font-semibold tracking-wide flex items-center gap-2"><i class="fas fa-box-open text-primary-500"></i>Item Management</h2>
+            </div>
+            <div class="p-5 flex flex-wrap gap-2">
+                <a href="{{ url_for('admin_lost_items') }}" class="inline-flex items-center gap-2 rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-red-700"><i class="fas fa-search"></i>Lost Items</a>
+                <a href="{{ url_for('admin_found_items') }}" class="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-indigo-700"><i class="fas fa-hand-holding-heart"></i>Found Items</a>
+                <a href="{{ url_for('admin_claims') }}" class="inline-flex items-center gap-2 rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-emerald-700"><i class="fas fa-clipboard-list"></i>Claims</a>
+                <a href="{{ url_for('admin_expire_old_items') }}" class="inline-flex items-center gap-2 rounded-md bg-amber-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-amber-700"><i class="fas fa-calendar-xmark"></i>Expire Old</a>
             </div>
         </div>
-
-        <div class="col-lg-6 mb-4">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h3 class="h5 mb-0"><i class="fas fa-users-cog me-2"></i>User & Activity</h3>
-                </div>
-                <div class="card-body d-flex flex-wrap gap-2">
-                    <a href="{{ url_for('admin_users') }}" class="btn btn-secondary"><i class="fas fa-users me-1"></i>Manage Users</a>
-                    <a href="{{ url_for('admin_activity_logs') }}" class="btn btn-secondary"><i class="fas fa-clipboard-list me-1"></i>Activity Logs</a>
-                </div>
+        <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
+            <div class="flex items-center justify-between border-b px-5 py-3">
+                <h2 class="text-sm font-semibold tracking-wide flex items-center gap-2"><i class="fas fa-users-cog text-primary-500"></i>User & Activity</h2>
+            </div>
+            <div class="p-5 flex flex-wrap gap-2">
+                <a href="{{ url_for('admin_users') }}" class="inline-flex items-center gap-2 rounded-md bg-gray-700 px-4 py-2 text-sm font-medium text-white shadow hover:bg-gray-800"><i class="fas fa-users"></i>Users</a>
+                <a href="{{ url_for('admin_activity_logs') }}" class="inline-flex items-center gap-2 rounded-md bg-gray-700 px-4 py-2 text-sm font-medium text-white shadow hover:bg-gray-800"><i class="fas fa-clipboard-list"></i>Activity Logs</a>
             </div>
         </div>
-
-        <div class="col-lg-6 mb-4">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h3 class="h5 mb-0"><i class="fas fa-cogs me-2"></i>System Administration</h3>
-                </div>
-                <div class="card-body d-flex flex-wrap gap-2">
-                    <a href="{{ url_for('admin_categories') }}" class="btn btn-dark"><i class="fas fa-tags me-1"></i>Manage Categories</a>
-                    <a href="{{ url_for('admin_locations') }}" class="btn btn-dark"><i class="fas fa-map-marker-alt me-1"></i>Manage Locations</a>
-                    <a href="{{ url_for('admin_settings') }}" class="btn btn-dark"><i class="fas fa-tools me-1"></i>System Settings</a>
-                    <a href="{{ url_for('admin_search') }}" class="btn btn-dark"><i class="fas fa-search me-1"></i>Global Search</a>
-                </div>
+        <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
+            <div class="flex items-center justify-between border-b px-5 py-3">
+                <h2 class="text-sm font-semibold tracking-wide flex items-center gap-2"><i class="fas fa-cogs text-primary-500"></i>System Administration</h2>
+            </div>
+            <div class="p-5 flex flex-wrap gap-2">
+                <a href="{{ url_for('admin_categories') }}" class="inline-flex items-center gap-2 rounded-md bg-slate-800 px-4 py-2 text-sm font-medium text-white shadow hover:bg-slate-900"><i class="fas fa-tags"></i>Categories</a>
+                <a href="{{ url_for('admin_locations') }}" class="inline-flex items-center gap-2 rounded-md bg-slate-800 px-4 py-2 text-sm font-medium text-white shadow hover:bg-slate-900"><i class="fas fa-map-marker-alt"></i>Locations</a>
+                <a href="{{ url_for('admin_settings') }}" class="inline-flex items-center gap-2 rounded-md bg-slate-800 px-4 py-2 text-sm font-medium text-white shadow hover:bg-slate-900"><i class="fas fa-tools"></i>Settings</a>
+                <a href="{{ url_for('admin_search') }}" class="inline-flex items-center gap-2 rounded-md bg-slate-800 px-4 py-2 text-sm font-medium text-white shadow hover:bg-slate-900"><i class="fas fa-magnifying-glass"></i>Search</a>
             </div>
         </div>
-
-        <div class="col-lg-6 mb-4">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h3 class="h5 mb-0"><i class="fas fa-chart-line me-2"></i>Analytics</h3>
-                </div>
-                <div class="card-body d-flex flex-wrap gap-2">
-                    <a href="{{ url_for('admin_statistics') }}" class="btn btn-success"><i class="fas fa-eye me-1"></i>View Statistics</a>
-                </div>
+        <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
+            <div class="flex items-center justify-between border-b px-5 py-3">
+                <h2 class="text-sm font-semibold tracking-wide flex items-center gap-2"><i class="fas fa-chart-line text-primary-500"></i>Analytics</h2>
+            </div>
+            <div class="p-5 flex flex-wrap gap-2">
+                <a href="{{ url_for('admin_statistics') }}" class="inline-flex items-center gap-2 rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-emerald-700"><i class="fas fa-eye"></i>View Statistics</a>
             </div>
         </div>
     </div>
 
-
-    <div class="row mt-4">
-        <div class="col-lg-4 mb-4">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h3 class="h5 mb-0"><i class="fas fa-exclamation-triangle text-white me-2"></i>Recent Lost Items</h3>
+    <!-- Recent Tables -->
+    <div class="grid gap-6 lg:grid-cols-3">
+        <!-- Recent Lost -->
+        <div class="rounded-xl border border-gray-200 bg-white shadow-sm flex flex-col overflow-hidden">
+            <div class="flex items-center gap-2 border-b px-5 py-3">
+                <i class="fas fa-triangle-exclamation text-red-500"></i>
+                <h3 class="text-sm font-semibold tracking-wide">Recent Lost Items</h3>
+            </div>
+            <div class="flex-1 overflow-hidden">
+                {% if recent_lost %}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm">
+                        <thead class="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-600">
+                            <tr>
+                                <th class="px-4 py-2 font-semibold">Item</th>
+                                <th class="px-4 py-2 font-semibold">Status</th>
+                                <th class="px-4 py-2 font-semibold">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            {% for item in recent_lost %}
+                            {% set badge = 'bg-gray-100 text-gray-700' %}
+                            {% if item.status == 'active' %}{% set badge='bg-amber-100 text-amber-700' %}
+                            {% elif item.status == 'claimed' %}{% set badge='bg-emerald-100 text-emerald-700' %}
+                            {% elif item.status in ['expired','returned'] %}{% set badge='bg-gray-200 text-gray-700' %}{% endif %}
+                            <tr class="hover:bg-gray-50/60">
+                                <td class="px-4 py-2">
+                                    <div class="font-medium text-gray-800">{{ item.item_name }}</div>
+                                    <div class="text-xs text-gray-500">{{ item.category }}</div>
+                                </td>
+                                <td class="px-4 py-2"><span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold {{ badge }}">{{ item.status }}</span></td>
+                                <td class="px-4 py-2 text-gray-600">{{ item.created_at.strftime('%Y-%m-%d') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-                <div class="card-body p-0">
-                    {% if recent_lost %}
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Item</th>
-                                        <th>Status</th>
-                                        <th>Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for item in recent_lost %}
-                                    <tr>
-                                        <td>{{ item.item_name }}<br><small class="text-muted">{{ item.category }}</small></td>
-                                        <td><span class="badge bg-danger">{{ item.status }}</span></td>
-                                        <td>{{ item.created_at.strftime('%Y-%m-%d') }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    {% else %}
-                        <p class="p-3 text-center text-muted">No recent lost items found.</p>
-                    {% endif %}
-                </div>
+                {% else %}
+                <p class="p-4 text-center text-sm text-gray-500">No recent lost items.</p>
+                {% endif %}
             </div>
         </div>
 
-        <div class="col-lg-4 mb-4">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h3 class="h5 mb-0"><i class="fas fa-hand-holding-heart text-white me-2"></i>Recent Found Items</h3>
+        <!-- Recent Found -->
+        <div class="rounded-xl border border-gray-200 bg-white shadow-sm flex flex-col overflow-hidden">
+            <div class="flex items-center gap-2 border-b px-5 py-3">
+                <i class="fas fa-hand-holding-heart text-indigo-500"></i>
+                <h3 class="text-sm font-semibold tracking-wide">Recent Found Items</h3>
+            </div>
+            <div class="flex-1 overflow-hidden">
+                {% if recent_found %}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm">
+                        <thead class="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-600">
+                            <tr>
+                                <th class="px-4 py-2 font-semibold">Item</th>
+                                <th class="px-4 py-2 font-semibold">Status</th>
+                                <th class="px-4 py-2 font-semibold">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            {% for item in recent_found %}
+                            {% set badge = 'bg-gray-100 text-gray-700' %}
+                            {% if item.status == 'active' %}{% set badge='bg-indigo-100 text-indigo-700' %}
+                            {% elif item.status == 'claimed' %}{% set badge='bg-amber-100 text-amber-700' %}
+                            {% elif item.status == 'returned' %}{% set badge='bg-emerald-100 text-emerald-700' %}
+                            {% elif item.status == 'expired' %}{% set badge='bg-gray-200 text-gray-700' %}{% endif %}
+                            <tr class="hover:bg-gray-50/60">
+                                <td class="px-4 py-2">
+                                    <div class="font-medium text-gray-800">{{ item.item_name }}</div>
+                                    <div class="text-xs text-gray-500">{{ item.category }}</div>
+                                </td>
+                                <td class="px-4 py-2"><span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold {{ badge }}">{{ item.status }}</span></td>
+                                <td class="px-4 py-2 text-gray-600">{{ item.created_at.strftime('%Y-%m-%d') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-                <div class="card-body p-0">
-                    {% if recent_found %}
-                         <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Item</th>
-                                        <th>Status</th>
-                                        <th>Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for item in recent_found %}
-                                    <tr>
-                                        <td>{{ item.item_name }}<br><small class="text-muted">{{ item.category }}</small></td>
-                                        <td><span class="badge bg-primary">{{ item.status }}</span></td>
-                                        <td>{{ item.created_at.strftime('%Y-%m-%d') }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    {% else %}
-                        <p class="p-3 text-center text-muted">No recent found items found.</p>
-                    {% endif %}
-                </div>
+                {% else %}
+                <p class="p-4 text-center text-sm text-gray-500">No recent found items.</p>
+                {% endif %}
             </div>
         </div>
 
-        <div class="col-lg-4 mb-4">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h3 class="h5 mb-0"><i class="fas fa-check-square text-white me-2"></i>Recent Claims</h3>
+        <!-- Recent Claims -->
+        <div class="rounded-xl border border-gray-200 bg-white shadow-sm flex flex-col overflow-hidden">
+            <div class="flex items-center gap-2 border-b px-5 py-3">
+                <i class="fas fa-clipboard-check text-emerald-600"></i>
+                <h3 class="text-sm font-semibold tracking-wide">Recent Claims</h3>
+            </div>
+            <div class="flex-1 overflow-hidden">
+                {% if recent_claims %}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm">
+                        <thead class="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-600">
+                            <tr>
+                                <th class="px-4 py-2 font-semibold">Claimant</th>
+                                <th class="px-4 py-2 font-semibold">Status</th>
+                                <th class="px-4 py-2 font-semibold">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            {% for claim in recent_claims %}
+                            {% set badge = 'bg-gray-100 text-gray-700' %}
+                            {% if claim.status == 'pending' %}{% set badge='bg-amber-100 text-amber-700' %}
+                            {% elif claim.status == 'approved' %}{% set badge='bg-emerald-100 text-emerald-700' %}
+                            {% elif claim.status == 'rejected' %}{% set badge='bg-red-100 text-red-700' %}{% endif %}
+                            <tr class="hover:bg-gray-50/60">
+                                <td class="px-4 py-2">
+                                    <div class="font-medium text-gray-800">{{ claim.full_names }}</div>
+                                    <div class="text-xs text-gray-500">{{ claim.item_type }} item</div>
+                                </td>
+                                <td class="px-4 py-2"><span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold {{ badge }}">{{ claim.status }}</span></td>
+                                <td class="px-4 py-2 text-gray-600">{{ claim.created_at.strftime('%Y-%m-%d') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-                <div class="card-body p-0">
-                    {% if recent_claims %}
-                         <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Claimant</th>
-                                        <th>Status</th>
-                                        <th>Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for claim in recent_claims %}
-                                    <tr>
-                                        <td>{{ claim.full_names }}<br><small class="text-muted">{{ claim.item_type }} Item</small></td>
-                                        <td><span class="badge bg-warning text-dark">{{ claim.status }}</span></td>
-                                        <td>{{ claim.created_at.strftime('%Y-%m-%d') }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    {% else %}
-                        <p class="p-3 text-center text-muted">No recent claims found.</p>
-                    {% endif %}
-                </div>
+                {% else %}
+                <p class="p-4 text-center text-sm text-gray-500">No recent claims.</p>
+                {% endif %}
             </div>
         </div>
     </div>
