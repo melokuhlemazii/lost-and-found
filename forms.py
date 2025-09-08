@@ -1,4 +1,7 @@
 from flask_wtf import FlaskForm
+from wtforms import SubmitField
+class DeleteUserForm(FlaskForm):
+    submit = SubmitField('Delete')
 from wtforms import StringField, TextAreaField, SelectField, FileField, SubmitField, PasswordField, HiddenField, BooleanField, DateField, IntegerField
 from wtforms.validators import DataRequired, InputRequired, Length, Email, EqualTo, Optional
 

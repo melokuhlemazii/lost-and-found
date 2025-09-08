@@ -821,16 +821,20 @@ def admin_bulk_action(item_type):
     
     return redirect(request.referrer or url_for('admin_dashboard'))
 
+
+from forms import DeleteUserForm
+
 @app.route('/admin/users')
 @login_required
 @admin_required
 def admin_users():
     page = request.args.get('page', 1, type=int)
     users = User.query.paginate(page=page, per_page=20, error_out=False)
-    
+    delete_forms = {user.id: DeleteUserForm() for user in users.items}
     return render_template('admin_users.html',
                          title='Manage Users',
-                         users=users)
+                         users=users,
+                         delete_forms=delete_forms)
 
 @app.route('/admin/edit-user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
@@ -868,6 +872,8 @@ def admin_delete_user(user_id):
         flash('You cannot delete the main admin user.', 'error')
         return redirect(url_for('admin_users'))
     
+    # Delete all user activities for this user first
+    UserActivity.query.filter_by(user_id=user.id).delete()
     db.session.delete(user)
     db.session.commit()
     
