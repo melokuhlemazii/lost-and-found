@@ -1,17 +1,26 @@
 from flask_wtf import FlaskForm
 from wtforms import SubmitField
+from wtforms import StringField, TextAreaField, SelectField, FileField, SubmitField, PasswordField, HiddenField, BooleanField, DateField, IntegerField
+from wtforms.validators import DataRequired, InputRequired, Length, Email, EqualTo, Optional, Regexp
+
 class DeleteUserForm(FlaskForm):
     submit = SubmitField('Delete')
-from wtforms import StringField, TextAreaField, SelectField, FileField, SubmitField, PasswordField, HiddenField, BooleanField, DateField, IntegerField
-from wtforms.validators import DataRequired, InputRequired, Length, Email, EqualTo, Optional
 
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
+    username = StringField('Username', validators=[
+        DataRequired(),
+        Length(min=3, max=20),
+        Regexp('^[A-Za-z]+$', message='Username must contain only alphabet characters.')
+    ])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
 
 class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=3, max=20)])
+    username = StringField('Username', validators=[
+        DataRequired(),
+        Length(min=3, max=20),
+        Regexp('^[A-Za-z]+$', message='Username must contain only alphabet characters.')
+    ])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
@@ -43,19 +52,18 @@ class LostItem(FlaskForm):
         ('clothing', 'Clothing'),
         ('jewelry', 'Jewelry'),
         ('sports', 'Sports'),
-        ('other', 'Other')])
+        ('other', 'Other')], validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired(), Length(max=500)])
     location = SelectField('Where did you lose it?', choices=[
         ('select_location', 'Select Location'),
         ('library_steve_biko', 'Library(Steve Biko)'),
         ('library_ml_sultan', 'Library(M.L. Sultan)'),
-        ('it_labs_ritson', 'IT Labs(Ritson)')
-    ])
+        ('it_labs_ritson', 'IT Labs(Ritson)')], validators=[DataRequired()])
     full_names = StringField('Full Names', validators=[DataRequired()])
     student_number = StringField('Student Number', validators=[DataRequired()])
     student_email = StringField('Student Email', validators=[DataRequired()])
     submit = SubmitField('Submit Lost Item')
-    photo = FileField('Upload Item Photo')
+    photo = FileField('Upload Item Photo', validators=[DataRequired()])
 
 class FoundItem(FlaskForm):
     item_name = StringField('Item Name', validators=[DataRequired()])
@@ -68,14 +76,13 @@ class FoundItem(FlaskForm):
         ('clothing', 'Clothing'),
         ('jewelry', 'Jewelry'),
         ('sports', 'Sports'),
-        ('other', 'Other')])
+        ('other', 'Other')], validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired(), Length(max=500)])
     location = SelectField('Where did you find it?', choices=[
         ('select_location', 'Select Location'),
         ('library_steve_biko', 'Library(Steve Biko)'),
         ('library_ml_sultan', 'Library(M.L. Sultan)'),
-        ('it_labs_ritson', 'IT Labs(Ritson)')
-    ])
+        ('it_labs_ritson', 'IT Labs(Ritson)')], validators=[DataRequired()])
     full_names = StringField('Full Names', validators=[DataRequired()])
     student_number = StringField('Student Number', validators=[DataRequired()])
     student_email = StringField('Student Email', validators=[DataRequired()])
@@ -83,10 +90,9 @@ class FoundItem(FlaskForm):
         ('select_location', 'Select Location'),
         ('i_have_it_with_me', 'I have it with me'),
         ('department_office', 'Department Office'),
-        ('library_information_desk', 'Library Information Desk')
-    ])
+        ('library_information_desk', 'Library Information Desk')], validators=[DataRequired()])
     submit = SubmitField('Submit Found Item')
-    photo = FileField('Upload Item Photo')    
+    photo = FileField('Upload Item Photo', validators=[DataRequired()])
 
 class Claim(FlaskForm):
     full_names = StringField('Full Names', validators=[DataRequired()])
@@ -95,9 +101,8 @@ class Claim(FlaskForm):
     description = TextAreaField('Description', validators=[DataRequired(), Length(max=500)])
     item_type = SelectField('Item Type', choices=[
         ('lost', 'Lost Item'),
-        ('found', 'Found Item')
-    ], validators=[DataRequired()])
-    item_id = HiddenField('Item ID')
+        ('found', 'Found Item')], validators=[DataRequired()])
+    item_id = HiddenField('Item ID', validators=[DataRequired()])
     submit = SubmitField('Claim Item')
 
 class AdminItemStatusForm(FlaskForm):
@@ -155,20 +160,20 @@ class UserManagementForm(FlaskForm):
 
 class CategoryForm(FlaskForm):
     name = StringField('Category Name', validators=[DataRequired(), Length(max=50)])
-    description = TextAreaField('Description', validators=[Length(max=200)])
+    description = TextAreaField('Description', validators=[DataRequired(), Length(max=200)])
     is_active = BooleanField('Active', default=True)
     submit = SubmitField('Save Category')
 
 class LocationForm(FlaskForm):
     name = StringField('Location Name', validators=[DataRequired(), Length(max=100)])
-    description = TextAreaField('Description', validators=[Length(max=200)])
+    description = TextAreaField('Description', validators=[DataRequired(), Length(max=200)])
     is_active = BooleanField('Active', default=True)
     submit = SubmitField('Save Location')
 
 class SystemSettingForm(FlaskForm):
     key = StringField('Setting Key', validators=[DataRequired(), Length(max=100)])
     value = TextAreaField('Value', validators=[DataRequired()])
-    description = TextAreaField('Description', validators=[Length(max=200)])
+    description = TextAreaField('Description', validators=[DataRequired(), Length(max=200)])
     submit = SubmitField('Save Setting')
 
 class SearchForm(FlaskForm):
@@ -181,7 +186,7 @@ class SearchForm(FlaskForm):
     submit = SubmitField('Search')
 
 class ItemSearchForm(FlaskForm):
-    query = StringField('Search Items', validators=[Optional()])
+    query = StringField('Search Items', validators=[DataRequired()])
     category = SelectField('Category', choices=[
         ('all', 'All Categories'),
         ('electronics', 'Electronics'),
@@ -192,12 +197,12 @@ class ItemSearchForm(FlaskForm):
         ('jewelry', 'Jewelry'),
         ('sports', 'Sports'),
         ('other', 'Other')
-    ], validators=[Optional()])
+    ], validators=[DataRequired()])
     item_type = SelectField('Item Type', choices=[
         ('all', 'All Items'),
         ('lost', 'Lost Items'),
         ('found', 'Found Items')
-    ], validators=[Optional()])
+    ], validators=[DataRequired()])
     submit = SubmitField('Search')
     
 
