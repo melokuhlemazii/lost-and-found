@@ -1134,7 +1134,7 @@ def create_default_users():
         return f"Error creating users: {str(e)}"
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
 
 
 
