@@ -9,7 +9,7 @@ services:
         sync: false
       - key: SQLALCHEMY_DATABASE_URI
         sync: false
-      - key: MAIL_SERVER
+      - key: MAIL_SERVER 
         sync: false
       - key: MAIL_PORT
         sync: false
